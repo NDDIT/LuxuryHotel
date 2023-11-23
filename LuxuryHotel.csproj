@@ -124,6 +124,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Reception\Controllers\CheckIn_CheckOutController.cs" />
     <Compile Include="Areas\Reception\Controllers\CustomerController.cs" />
     <Compile Include="Areas\Reception\Controllers\ImageController.cs" />
     <Compile Include="Areas\Reception\Controllers\LoginLogoutController.cs" />
@@ -2127,6 +2128,7 @@
     <Content Include="Areas\Reception\Views\Service\Index.cshtml" />
     <Content Include="Areas\Reception\Views\Image\Index.cshtml" />
     <Content Include="Areas\Reception\Views\Image\Edit.cshtml" />
+    <Content Include="Areas\Reception\Views\CheckIn_CheckOut\Index.cshtml" />
     <None Include="Models\db.dbml.layout">
       <DependentUpon>db.dbml</DependentUpon>
     </None>
