@@ -9,6 +9,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
 {
     public class CustomerController : Controller
     {
+        
         private dbDataContext db = new dbDataContext();
         // GET: Reception/Customer
         public ActionResult Index()
