@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
+    [Authorize]
     public class ImageController : Controller
     {
         // GET: Reception/Image

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         

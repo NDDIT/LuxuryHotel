@@ -140,7 +140,7 @@
                                 <i class="ti-settings text-primary"></i>
                                 Settings
                             </a>
-                            <a class="dropdown-item" href="@Url.Action("Logout", "Admin")">
+                            <a class="dropdown-item" href="@Url.Action("Logout", "LoginLogout")">
                                 <i class="ti-power-off text-primary"></i>
                                 Logout
                             </a>
@@ -316,6 +316,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index", "CheckIn_CheckOut")">
+                            <i class="icon-grid menu-icon"></i>
+                            <span class="menu-title">Thuê & Trả Phòng </span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("Index", "Room")">
                             <i class="icon-grid menu-icon"></i>
                             <span class="menu-title">Quản lý Phòng</span>
@@ -337,6 +343,12 @@
                         <a class="nav-link" href="@Url.Action("Index","Image")">
                             <i class="icon-grid menu-icon"></i>
                             <span class="menu-title">Quản lý Ảnh</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Index","Customer")">
+                            <i class="icon-grid menu-icon"></i>
+                            <span class="menu-title">Quản lý Khách Hàng</span>
                         </a>
                     </li>
 

@@ -9,7 +9,7 @@ using System.Web.Services.Description;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
-
+    [Authorize]
     public class ServiceController : Controller
     {
         private dbDataContext db = new dbDataContext();

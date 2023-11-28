@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
+    [Authorize]
     public class RoomController : Controller
     {
         private dbDataContext db = new dbDataContext();
@@ -79,6 +80,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
             try
             {
                 var typeName = db.ROOMTYPEs.Where(rt => rt.RoomTypeID == typeID).Select(rt => rt.TypeName).FirstOrDefault();
+
                 return Json(new { typeName = typeName }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)

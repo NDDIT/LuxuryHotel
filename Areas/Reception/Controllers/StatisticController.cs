@@ -7,11 +7,12 @@ using System.Web.Mvc;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
+    [Authorize]
     public class StatisticController : Controller
     {
         private dbDataContext db = new dbDataContext();
 
-        [Authorize]
+        
         public ActionResult Index()
         {
             return View();

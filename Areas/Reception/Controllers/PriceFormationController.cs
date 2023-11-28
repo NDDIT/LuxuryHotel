@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace LuxuryHotel.Areas.Reception.Controllers
 {
+    [Authorize]
     public class PriceFormationController : Controller
     {
         private dbDataContext _db = new dbDataContext();
