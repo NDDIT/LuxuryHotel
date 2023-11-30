@@ -95,6 +95,9 @@
         .show-dropdown {
             display: block;
         }
+        #checkOutForm {
+            display: none;
+        }
     </style>
 }
 @section Scripts {
@@ -175,10 +178,10 @@
                                 dropdownContent += '<a href="#">Nhận đặt phòng</a>';
                                 bodyDiv += '<div><span class="material-symbols-outlined">emoji_people</span> <span id="type-name-' + rooms.RoomTypeID+'"></span></div>';
                             } else if (rooms.RoomStatus === 'Booked') {
-                                dropdownContent += '<a href="#" onclick="CheckOut(' + rooms.RoomID + ')">Trả phòng</a>';
+                                dropdownContent += '<a href="#" onclick="showCheckoutForm(' + rooms.RoomID + ')">Trả phòng</a>';
                                 getDateCheckinAndStartInterval(rooms.RoomID);
-                                bodyDiv += '<div><span class="material-symbols-outlined"> timer </span> <span  id="time-difference-' + rooms.RoomID + '"></span></div>';
-                                bodyDiv += '<div><span class="material-symbols-outlined"> finance_chip </span> <span  id="price-' + rooms.RoomID + '"></span> </div>';
+                                bodyDiv += '<div><span class="material-symbols-outlined"> timer </span> <span  id="time-difference-' + rooms.RoomID + '"></span><span> trước</span><input type="hidden" id="roomPrice-' + rooms.RoomID +'" value=""></div>';
+                                bodyDiv += '<div><span class="material-symbols-outlined"> finance_chip </span> <span  id="price-' + rooms.RoomID + '"></span><span> VND</span> </div>';
 
                             } else if (rooms.RoomStatus === 'Soon') {
                                 dropdownContent += '<a href="#" onclick="Clear(' + rooms.RoomID + ')">Dọn phòng</a>';
@@ -242,7 +245,7 @@
         function updateElapsedTime(checkinDate, RoomID, RoomType) {
            
             var checkinDateObj = parseJsonDateString(checkinDate);
-
+            var hourscheck = checkinDateObj.getHours();
             // Thời gian hiện tại
             var currentTime = new Date();
 
@@ -254,27 +257,39 @@
             var minutes = Math.floor((timeDifference % 3600000) / 60000); // 1 phút = 60000 milliseconds
             var seconds = Math.floor(((timeDifference % 3600000) % 60000) / 1000);
             // Hiển thị thời gian đã trôi qua cho phòng cụ thể
-            var formattedTime = hours + "h " + minutes + "m" + seconds + "s trước";
+            var formattedTime = hours + "h " + minutes + "m" + seconds + "s";
             $('#time-difference-' + RoomID).text(formattedTime); // Sử dụng ID phòng để phân biệt
 
 
             var totalMinutes = Math.floor(timeDifference / 60000); // Chuyển đổi thành phút
             var totalPrice = 0;
 
-            // Giá tiền cho giờ đầu tiên
-            totalPrice += RoomType[0].PriceFirstHour;
+            if (totalMinutes > 600) {
+                totalPrice = ((totalMinutes / 1440) + 1) * RoomType[0].PriceByDay;
+              
+            }
+            else if (hourscheck >= 22) {
+                totalPrice = RoomType[0].OverNightPrice;
+            }
+            else {
+                // Giá tiền cho giờ đầu tiên
+                totalPrice += RoomType[0].PriceFirstHour;
 
-            // Giá tiền cho các phút tiếp theo
-            if (totalMinutes > 60) {
-                var additionalHours = Math.floor((totalMinutes - 60) / 60);
-                var additionalMinutes = (totalMinutes - 60) % 60;
+                // Giá tiền cho các phút tiếp theo
+                if (totalMinutes > 60) {
+                    var additionalHours = Math.floor((totalMinutes - 60) / 60);
+                    var additionalMinutes = (totalMinutes - 60) % 60;
 
-                totalPrice += additionalHours * RoomType[0].PricePerHour;
-                if (additionalMinutes > 0) {
-                    totalPrice += (RoomType[0].PricePerHour / 60) * additionalMinutes; // Giả sử tính giá như giờ
+                    totalPrice += additionalHours * RoomType[0].PricePerHour;
+                    if (additionalMinutes > 0) {
+                        totalPrice += (RoomType[0].PricePerHour / 60) * additionalMinutes; // Giả sử tính giá như giờ
+                    }
                 }
             }
-            $('#price-' + RoomID).text(parseFloat(totalPrice).toLocaleString()+" VND");
+
+
+            $('#roomPrice-' + RoomID).val(parseInt(totalPrice));
+            $('#price-' + RoomID).text(parseFloat(totalPrice).toLocaleString());
 
 
 
@@ -360,7 +375,187 @@
         function handleDropdownClick(event) {
             event.stopPropagation();
         }
+        function loadService(ServiceID) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/Reception/Service/GetService',
+                    type: 'get',
+                    success: function (data) {
+                        if (data.code == 200) {
+                            var foundService = data.services.find(function (service) {
+                                return service.ServiceID === ServiceID;
+                            });
 
+                            if (foundService) {
+                                resolve(foundService);
+                            } else {
+                                reject('Dịch vụ không tìm thấy');
+                            }
+                        } else {
+                            reject('Lỗi khi tải dịch vụ');
+                        }
+                    },
+                    error: function (error) {
+                        reject('Lỗi khi tải dịch vụ:', error);
+                    }
+                });
+            });
+        }
+
+        function GetService(services) {
+            var servicePromises = services.map(function (service) {
+                return loadService(service.ServiceID);
+            });
+
+            return Promise.all(servicePromises)
+                .then(function (foundServices) {
+                    var roomTable = $('<table>').addClass('table table-striped').css('text-align', 'center').attr('id', 'table-room-lst');
+                    var tableHeader = $('<thead>').append('<tr><th style="display: none;">ID Dịch vụ</th><th>Tên Dịch vụ</th><th>Giá</th><th>Thời gian</th></tr>');
+                    var tableBody = $('<tbody>');
+                    var total = 0;
+
+                    foundServices.forEach(function (foundService, index) {
+                        var service = services[index];
+                        var requestDate = parseJsonDateString(service.RequestDate);
+                        var formattedDate = requestDate.toISOString().slice(0, 16);
+                        var roomRow = $('<tr>').append(
+                            $('<td style="display: none;">').text(service.RequestID),
+                            $('<td>').text(foundService.ServiceName),
+                            $('<td>').text(foundService.ServicePrice),
+                            $('<td>').text(formattedDate)
+                        );
+                        tableBody.append(roomRow);
+                        total += foundService.ServicePrice;
+                    });
+
+                    roomTable.append(tableHeader).append(tableBody);
+                    $('#sevice-list').html(roomTable);
+                    return total;
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    return 0; // hoặc xử lý lỗi tùy theo yêu cầu
+                });
+        }
+
+
+
+        function showCheckForm(services, CheckInDate, RoomID , CheckInID) {
+            
+            var checkinDateObj = parseJsonDateString(CheckInDate);
+            var formattedCheckinDate = formatDateForInput(checkinDateObj);
+            $('#txtCheckInDate').val(formattedCheckinDate);
+            $('#txtCheckInID').val(CheckInID);
+
+            if (RoomID) {
+                $('#txtTotalTime').val($('#time-difference-' + RoomID).text());
+               
+                $('#txtTotalRoomPrice').val($('#price-' + RoomID).text());
+            }
+
+            var currentTime = new Date();
+            var formattedCurrentTime = formatDateForInput(currentTime);
+            $('#txtCheckOutDate').val(formattedCurrentTime);
+        
+            var totalPrice;
+            GetService(services)
+                .then(function (total) {
+                    var roomPrice = parseFloat($('#roomPrice-' + RoomID).val());
+                    totalPrice = roomPrice + total;
+                    $('#Total').val(totalPrice);
+                    $('#TotalPrice').val(totalPrice.toLocaleString());
+                    $('#paid').val('0');
+                    var Paid = parseInt($('#paid').val());
+                    var NeedToPay = totalPrice - Paid;
+                    console.log(NeedToPay);
+                    $('#need-to-pay').val(NeedToPay.toLocaleString());
+                })
+                .catch(function (error) {
+                    console.error('Lỗi khi tính tổng giá:', error);
+                });
+            
+            
+            $('#checkOutForm').show();
+        }
+
+        function formatDateForInput(date) {
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var day = ('0' + date.getDate()).slice(-2);
+            var hours = ('0' + date.getHours()).slice(-2);
+            var minutes = ('0' + date.getMinutes()).slice(-2);
+
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+
+
+        function showCheckoutForm(RoomID) {
+            $.ajax({
+                url: '/Reception/CheckIn_CheckOut/GetCheckOut',
+                type: 'get',
+                data: {
+                    RoomID: RoomID
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        if (data.CheckInDate && RoomID) {
+                            showCheckForm(data.services, data.CheckInDate, RoomID, data.CheckInID);
+                        } else {
+                            console.error("Invalid data.");
+                        }
+                    } else {
+                        console.error(data.msg);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error getting checkout data:', error);
+                }
+            });
+        }
+
+
+
+        function closeCheckoutForm() {
+            // Close the checkout form
+            $('#checkOutForm').hide();
+        }
+
+        function submitCheckoutForm() {
+            var CheckInID = $('#txtCheckInID').val();
+            var CheckOutDate = $('#txtCheckOutDate').val();
+            var Total = $('#Total').val();
+
+            // Chuẩn bị dữ liệu cho yêu cầu AJAX
+            var requestData = {
+                CheckInID: CheckInID,
+                CheckOutDate: CheckOutDate,
+                Total: Total
+            };
+
+            // Gửi yêu cầu AJAX
+            $.ajax({
+                url: '/Reception/CheckIn_CheckOut/SubmitCheckOut',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function (data) {
+                    if (data.code === 200) {
+                        closeCheckoutForm();
+                        var selectedArea = $('#areaSelect').val();
+                        getRoomsCheckInByArea(selectedArea);
+                        alert('Trả phòng thành công');
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Lỗi AJAX:', status, error);
+                    console.log('Văn bản phản hồi:', xhr.responseText);
+                    alert('Đã xảy ra lỗi khi gửi biểu mẫu. Vui lòng kiểm tra console để biết chi tiết.');
+                }
+            });
+        }
 
     </script>
 }
@@ -409,6 +604,7 @@
         <form id="CheckForm">
             <div class="form-group">
                 <input type="hidden" id="txtCheckInID" />
+                <input type="hidden" id="Total" />
             </div>
             <div class="form-group">
                 <label for="editUser">Thời gian nhận phòng: </label>
@@ -428,24 +624,24 @@
             </div>
             <div class="form-group">
                 <label for="editPhoneNumber">Các dịch vụ đã sử dụng</label>
-                <input type="text" class="form-control" id="editPhoneNumber">
+                <div id="sevice-list"></div>
             </div>
             <div class="form-group">
                 <label for="editPhoneNumber">Tổng tiền:</label>
-                <input type="text" class="form-control" id="editPhoneNumber">
+                <input type="text" class="form-control" id="TotalPrice" readonly>
+
             </div>
             <div class="form-group">
                 <label for="editPhoneNumber">Đã trả: </label>
-                <input type="text" class="form-control" id="editPhoneNumber">
+                <input type="number" class="form-control" id="paid" readonly>
             </div>
             <div class="form-group">
                 <label for="editPhoneNumber">Cần trả:</label>
-                <input type="text" class="form-control" id="editPhoneNumber">
+                <input type="text" class="form-control" id="need-to-pay" readonly>
             </div>
             <!-- Các nút để submit hoặc đóng form -->
-            <button type="button" class="btn btn-primary" onclick="submitcheckoutForm()">Submit</button>
-            <button type="button" class="btn btn btn-danger" id="btn-delete" onclick="deletecheckout()">Delete</button>
-            <button type="button" class="btn btn-secondary" onclick="closecheckoutForm()">Close</button>
+            <button type="button" class="btn btn-primary" onclick="submitCheckoutForm()">Submit</button>
+            <button type="button" class="btn btn-secondary" onclick="closeCheckoutForm()">Close</button>
         </form>
     </div>
 </div>

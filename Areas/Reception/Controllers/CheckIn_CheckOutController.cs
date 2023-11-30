@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -139,6 +140,83 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                 return Json(new { code = 500, msg = ex.Message });
             }
         }
+        
+        [HttpGet]
+        public JsonResult GetCheckOut(int RoomID)
+        {
+            try
+            {
+                var room = db.CHECKINROOMs
+                   .Where(r => r.RoomID == RoomID)
+                   .OrderByDescending(r => r.CheckInDate)
+                   .FirstOrDefault();
+                var CheckInDate = room.CheckInDate;
+                var CheckInID = room.CheckinID;
+                var services = db.SERVICEREQUESTs
+                   .Where(r => (r.CheckinID == room.CheckinID)&&(r.Status=="True"))
+                    .Select(r => new
+                    {
+                        RequestID = r.RequestID,
+                        RequestDate = r.RequestDate,
+                        CheckinID = r.CheckinID,
+                        ServiceID = r.ServiceID,
+                        Status = r.Status,
+                        Description = r.Description,
+                        ReceptionID = r.ReceptionID,
+
+                    })
+                   .ToList();
+
+                return Json(new { code = 200,CheckInID=CheckInID, CheckInDate = CheckInDate, services = services, msg = "Lấy danh sách phòng thành công" }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { code = 500, msg = "Lấy danh sách phòng thất bại: " + e.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        public JsonResult SubmitCheckOut(int CheckInID, DateTime CheckOutDate, int Total)
+        {
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+                    
+                    // Tạo đối tượng CUSTOMER mới và thiết lập giá trị
+                    CHECKOUTROOM room = new CHECKOUTROOM
+                    {
+                        // Thiết lập giá trị từ tham số
+                        CheckinID= CheckInID,
+                        CheckoutDate = CheckOutDate,
+                        Toltal=Total,
+
+                    };
+                    // Thêm loại phòng mới vào database
+                    db.CHECKOUTROOMs.InsertOnSubmit(room);
+                    db.SubmitChanges();
+                    var checkin = db.CHECKINROOMs.FirstOrDefault(r => r.CheckinID == CheckInID);
+                    var roomID = checkin.RoomID;
+                    var existingRoom = db.ROOMs.SingleOrDefault(r => r.RoomID == roomID);
+
+                    if (existingRoom != null)
+                    {
+                        existingRoom.RoomStatus = "Soon";
+                        db.SubmitChanges();
+
+                        return Json(new { code = 200, msg = "Checkout successfully." });
+                    }
+                }
+
+                return Json(new { code = 400, msg = "Invalid data. Please check your inputs." });
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                return Json(new { code = 500, msg = "Đã xảy ra lỗi: " + ex.Message });
+            }
+        }
+
         public int IDRep()
         {
             string receptionUsername = User.Identity.Name;

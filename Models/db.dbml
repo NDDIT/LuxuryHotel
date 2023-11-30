@@ -34,18 +34,10 @@
       <Column Name="CheckInDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ReceptionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="CHECKINROOM_SERVICEREQUEST" Member="SERVICEREQUESTs" ThisKey="CheckinID" OtherKey="CheckinID" Type="SERVICEREQUEST" />
-      <Association Name="CHECKINROOM_CHECKOUTROOM" Member="CHECKOUTROOMs" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKOUTROOM" />
       <Association Name="CHECKINROOM_PAYMENT" Member="PAYMENTs" ThisKey="CheckinID" OtherKey="CheckinID" Type="PAYMENT" />
+      <Association Name="CHECKINROOM_CHECKOUTROOM" Member="CHECKOUTROOMs" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKOUTROOM" />
       <Association Name="BOOKING_CHECKINROOM" Member="BOOKING" ThisKey="BookingID" OtherKey="BookingID" Type="BOOKING" IsForeignKey="true" />
       <Association Name="RECEPTION_CHECKINROOM" Member="RECEPTION" ThisKey="ReceptionID" OtherKey="ReceptionID" Type="RECEPTION" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.CHECKOUTROOM" Member="CHECKOUTROOMs">
-    <Type Name="CHECKOUTROOM">
-      <Column Name="CheckoutID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CheckinID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="CheckoutDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="CHECKINROOM_CHECKOUTROOM" Member="CHECKINROOM" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKINROOM" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.CUSTOMER" Member="CUSTOMERs">
@@ -103,7 +95,7 @@
       <Column Name="Area" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="ROOM_REVIEW" Member="REVIEWs" ThisKey="RoomID" OtherKey="RoomID" Type="REVIEW" />
       <Association Name="ROOM_RoomUtility" Member="RoomUtilities" ThisKey="RoomID" OtherKey="RoomID" Type="RoomUtility" />
-      <Association Name="ROOM_Image1" Member="Images" ThisKey="RoomID" OtherKey="RoomID" Type="Image" />
+      <Association Name="ROOM_Image" Member="Images" ThisKey="RoomID" OtherKey="RoomID" Type="Image" />
       <Association Name="ROOMTYPE_ROOM" Member="ROOMTYPE" ThisKey="RoomTypeID" OtherKey="RoomTypeID" Type="ROOMTYPE" IsForeignKey="true" />
     </Type>
   </Table>
@@ -150,7 +142,16 @@
       <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ImagePath" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="OderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="ROOM_Image1" Member="ROOM" ThisKey="RoomID" OtherKey="RoomID" Type="ROOM" IsForeignKey="true" />
+      <Association Name="ROOM_Image" Member="ROOM" ThisKey="RoomID" OtherKey="RoomID" Type="ROOM" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CHECKOUTROOM" Member="CHECKOUTROOMs">
+    <Type Name="CHECKOUTROOM">
+      <Column Name="CheckoutID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CheckinID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CheckoutDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Toltal" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="CHECKINROOM_CHECKOUTROOM" Member="CHECKINROOM" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKINROOM" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

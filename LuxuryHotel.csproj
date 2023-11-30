@@ -133,7 +133,8 @@
     <Compile Include="Areas\Reception\Controllers\ServiceController.cs" />
     <Compile Include="Areas\Reception\Controllers\StatisticController.cs" />
     <Compile Include="Areas\Reception\ReceptionAreaRegistration.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LuxuryHotelController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2272,11 +2273,17 @@
     <Content Include="Scripts\umd\popper.js.flow" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.min.js.map" />
+    <Content Include="Views\Shared\_LayoutUser.cshtml" />
+    <Content Include="Views\Shared\NavPartial.cshtml" />
+    <Content Include="Views\Shared\SlidePartial.cshtml" />
+    <Content Include="Views\Shared\FooterPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Admin\Images\Room\" />
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Reception\Data\" />
+    <Folder Include="Views\LuxuryHotel\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
