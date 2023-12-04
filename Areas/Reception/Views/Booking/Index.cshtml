@@ -1,0 +1,275 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Reception/Views/Shared/LayoutAdmin.cshtml";
+}
+
+@section customStyles {
+    @Styles.Render("~/Content/datatables")
+    <style>
+        .img-col {
+            max-width: 100px;
+        }
+
+        .mgt {
+            margin-top: 16px;
+        }
+
+        .table-and-form-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #editFormContainer {
+            width: 30%;
+            display: none;
+        }
+
+        .row {
+            width: calc(100% - 30%);
+            text-align: right;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        var dataTable = $('#tblBookList').DataTable({
+            "searching": true,
+            "ordering": true
+        });
+        function showEditForm(booking) {
+            $('#editFormContainer').show();
+            $('#editBookingID').val(booking.BookingID);
+            $('#editBookingDate').val(booking.BookingDate);
+            $('#editCheckInDate').val(booking.CheckInDate);
+            $('#editCheckOutDate').val(booking.CheckOutDate);
+            $('#editRoomTypeID').val(booking.RoomTypeID);
+            $('#editPaymentStatus').val(booking.PaymentStatus);
+            $('#editCustomerID').val(booking.CustomerID);
+            $('#btn-delete').show();
+        }
+
+        function showCreateForm() {
+
+
+            // Hiển thị form tạo mới và làm sạch giá trị
+            $('#editFormContainer').show();
+            $('#editBookingID').val('0');
+            $('#editBookingDate').val('');
+            $('#editCheckInDate').val('');
+            $('#editCheckOutDate').val('');
+            $('#editRoomTypeID').val('');
+            $('#editPaymentStatus').val('');
+            $('#editCustomerID').val('');
+            $('#btn-delete').hide();
+        }
+        function loadBooking(dataTable) {
+    $.ajax({
+        url: '/Reception/Booking/GetBookingList',
+        type: 'get',
+        success: function (data) {
+            if (data.code == 200) {
+                console.log(data);
+
+                // Kiểm tra xem dataTable đã được khởi tạo chưa
+                if (dataTable) {
+
+                    // Xóa dòng cũ
+                    dataTable.clear();
+
+                    // Thêm dữ liệu mới
+                    $.each(data.booking, function (k, v) {
+                        let s = '<tr id="' + v.BookingID + '">';
+                        s += '<td style="text-align: left;">' + v.BookingDate + '</td>';
+                        s += '<td>' + v.CheckInDate + '</td>';
+                        s += '<td>' + v.CheckOutDate + '</td>';
+                        s += '<td>' + v.RoomTypeID + '</td>';
+                        s += '<td>' + v.PaymentStatus + '</td>';
+                        s += '<td>' + v.CustomerID + '</td>';
+                        s += '<td class="col-ms-3 text-right">';
+                        s += '<button class="btn btn-sm btn-warning" name="update" onclick="editBooking(' + v.BookingID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
+                        s += '</td>';
+                        s += '</tr>';
+                        dataTable.row.add($(s));
+                    });
+
+                    // Tạo lại DataTable
+                    dataTable.draw();
+                }
+            }
+        }
+    });
+    }
+        $(document).ready(function () {
+
+
+            loadBooking(dataTable);
+        });
+
+
+
+
+
+        function deleteBooking() {
+            var bookingID = $('#editBookingID').val();
+
+            if (confirm('Bạn có chắc muốn xóa đặt phòng này không?')) {
+                $.ajax({
+                    url: '/Reception/Booking/CheckAndDeleteBooking',
+                    type: 'post',
+                    data: {
+                        bookingID: bookingID
+                    },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            $('#editFormContainer').hide();
+                            loadBooking(dataTable);
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi gửi dữ liệu lên server.');
+                    }
+                });
+            }
+        }
+
+        function editBooking(id) {
+            console.log(id);
+            $.ajax({
+                url: '/Reception/Booking/GetBookingDetails',
+                type: 'get',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        showEditForm(data.booking);
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+
+        function closeEditForm() {
+            $('#editFormContainer').hide();
+        }
+
+        function submitEditForm() {
+            function validateFormData() {
+                var editedBookingDate = $('#editBookingDate').val();
+                var editedCheckInDate = $('#editCheckInDate').val();
+                var editedCheckOutDate = $('#editCheckOutDate').val();
+
+
+                return true;
+            }
+
+            if (!validateFormData()) {
+                return;
+            }
+
+            var editedBookingID = $('#editBookingID').val();
+            var editedBookingDate = $('#editBookingDate').val();
+            var editedCheckInDate = $('#editCheckInDate').val();
+            var editedCheckOutDate = $('#editCheckOutDate').val();
+            var editedRoomTypeID = parseInt($('#editRoomTypeID').val());
+            var editedPaymentStatus = $('#editPaymentStatus').val();
+            var editedCustomerID = parseInt($('#editCustomerID').val());
+            console.log(editedRoomTypeID);
+            var actionUrl = '/Reception/Booking/Edit';
+
+            if (editBookingID === '0') {
+                actionUrl = '/Reception/Booking/CreateBooking';
+            }
+
+            $.ajax({
+                url: actionUrl,
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    BookingID: editedBookingID,
+                    BookingDate: editedBookingDate,
+                    CheckInDate: editedCheckInDate,
+                    CheckOutDate: editedCheckOutDate,
+                    RoomTypeID: editedRoomTypeID,
+                    PaymentStatus: editedPaymentStatus,
+                    CustomerID: editedCustomerID
+                }),
+                success: function (data) {
+                    if (data.code === 200) {
+                        $('#editFormContainer').hide();
+                        loadBooking(dataTable);
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function () {
+                    alert('Đã xảy ra lỗi khi gửi dữ liệu lên server.');
+                }
+            });
+        }
+    </script>
+}
+<button type="button" class="btn btn-success" onclick="showCreateForm()" style="width:80px">Create</button>
+
+<div class="table-and-form-container">
+    <div class="table-responsive mgt" style="width:80%">
+        <table id="tblRoomPrice" class="table table-striped" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Ngày đặt phòng</th>
+                    <th>Ngày nhận phòng</th>
+                    <th>Ngày trả phòng</th>
+                    <th>ID Loại phong</th>
+                    <th>Phương thức thanh toán</th>
+                    <th>ID Khách hàng</th>
+                    <th class="col-ms-3 text-right">Các chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu của bảng sẽ được thêm ở đây -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="editFormContainer">
+        <form id="editForm">
+            <div class="form-group">
+                <input type="hidden" id="editBookingID" name="BookingID" />
+            </div>
+            <div class="form-group">
+                <label for="editBookingDate">Ngày đặt phòng:</label>
+                <input type="datetime" class="form-control" id="editBookingDate">
+            </div>
+            <div class="form-group">
+                <label for="editCheckInDate">Ngày nhận phòng:</label>
+                <input type="datetime" class="form-control" id="editCheckInDate">
+            </div>
+            <div class="form-group">
+                <label for="editCheckOutDate">Ngày trả phòng:</label>
+                <input type="datetime" class="form-control" id="editCheckOutDate">
+            </div>
+            <div class="form-group">
+                <label for="editRoomTypeID">ID Loại phong:</label>
+                <input type="number" class="form-control" id="editRoomTypeID">
+            </div>
+            <div class="form-group">
+                <label for="editPaymentStatus">Phương thức thanh toán:</label>
+                <input type="text" class="form-control" id="editPaymentStatus">
+            </div>
+            <div class="form-group">
+                <label for="editCustomerID">ID Khách hàng:</label>
+                <input type="number" class="form-control" id="editCustomerID">
+            </div>
+
+            <!-- Các nút để submit hoặc đóng form -->
+            <button type="button" class="btn btn-primary" onclick="submitEditForm()">Submit</button>
+            <button type="button" class="btn btn btn-danger" id="btn-delete" onclick="deleteBooking()">Delete</button>
+            <button type="button" class="btn btn-secondary" onclick="closeEditForm()">Close</button>
+        </form>
+    </div>
+</div>
