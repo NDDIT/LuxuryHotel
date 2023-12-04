@@ -10,13 +10,14 @@ namespace LuxuryHotel.Areas.Reception.Controllers
 {
     public class UtilitiesController : Controller
     {
-        // GET: Reception/Utilities
         private dbDataContext _db = new dbDataContext();
 
+        // GET: Reception/Utilities
         public ActionResult Index()
         {
             return View();
         }
+
         [HttpGet]
         public JsonResult GetUtilities()
         {
@@ -39,29 +40,35 @@ namespace LuxuryHotel.Areas.Reception.Controllers
             }
         }
 
-
         [HttpPost]
-        public JsonResult CreateUtilities(int UtilitiesID, string UtilitiesName, string UtilitiesPicture)
+        public JsonResult CreateUtilities(int UtilitiesID, string UtilitiesName, HttpPostedFileBase UtilitiesPicture)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-              
                     Utility utilities = new Utility
                     {
-                        // Thiết lập giá trị từ tham số
-
                         UtilitiesID = UtilitiesID,
-                        UtilitiesName = UtilitiesName,
-                        UtilitiesPicture = UtilitiesPicture,
+                        UtilitiesName = UtilitiesName
                     };
 
-                    // Thêm loại phòng mới vào database
+                    // Process file upload
+                    if (UtilitiesPicture != null && UtilitiesPicture.ContentLength > 0)
+                    {
+                        // Save the file
+                        string fileName = Path.GetFileName(UtilitiesPicture.FileName);
+                        string path = Path.Combine(Server.MapPath("/Admin/Images/Room"), fileName);
+                        UtilitiesPicture.SaveAs(path);
+
+                        // Save the file path to the database
+                        utilities.UtilitiesPicture = fileName;
+                    }
+
                     _db.Utilities.InsertOnSubmit(utilities);
                     _db.SubmitChanges();
 
-                    return Json(new { code = 200, msg = "Room Type created successfully." });
+                    return Json(new { code = 200, msg = "Utilities created successfully." });
                 }
 
                 return Json(new { code = 400, msg = "Invalid data. Please check your inputs." });
@@ -72,9 +79,8 @@ namespace LuxuryHotel.Areas.Reception.Controllers
             }
         }
 
-
         [HttpPost]
-        public JsonResult Edit(int UtilitiesID, string UtilitiesName, string UtilitiesPicture)
+        public JsonResult Edit(int UtilitiesID, string UtilitiesName, HttpPostedFileBase UtilitiesPicture)
         {
             try
             {
@@ -86,9 +92,18 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                     {
                         existingUtilities.UtilitiesName = UtilitiesName;
 
-                        // Chuyển đổi giá trị từ chuỗi sang kiểu int
-                        existingUtilities.UtilitiesName = UtilitiesName;
-                        existingUtilities.UtilitiesPicture = UtilitiesPicture;
+                        // Process file upload
+                        if (UtilitiesPicture != null && UtilitiesPicture.ContentLength > 0)
+                        {
+                            // Save the file
+                            string fileName = Path.GetFileName(UtilitiesPicture.FileName);
+                            string path = Path.Combine(Server.MapPath("/Admin/Images/Room"), fileName);
+                            UtilitiesPicture.SaveAs(path);
+
+                            // Save the file path to the database
+                            existingUtilities.UtilitiesPicture = fileName;
+                        }
+
                         _db.SubmitChanges();
                         return Json(new { code = 200, msg = "Utilities updated successfully." });
                     }
@@ -101,7 +116,6 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                 return Json(new { code = 500, msg = ex.Message });
             }
         }
-
 
         [HttpGet]
         public JsonResult GetUtilitiesDetails(int id)
@@ -120,7 +134,6 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                         UtilitiesID = r.UtilitiesID,
                         UtilitiesName = r.UtilitiesName,
                         UtilitiesPicture = r.UtilitiesPicture,
-
                     })
                     .SingleOrDefault();
 
@@ -139,6 +152,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                 return Json(new { code = 500, msg = "Lấy thông tin dich vu thất bại: " + e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
+
         [HttpPost]
         public JsonResult CheckAndDeleteUtilities(int UtilitiesID)
         {

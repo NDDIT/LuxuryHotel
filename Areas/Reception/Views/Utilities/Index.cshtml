@@ -34,10 +34,11 @@
 
 @section Scripts {
     <script>
-        var dataTable = $('#tblUtilities').DataTable({
+        var dataTable = $('#tblRoomPrice').DataTable({
             "searching": true,
             "ordering": true
         });
+
         function showEditForm(utilities) {
             $('#editFormContainer').show();
             $('#editUtilitiesID').val(utilities.UtilitiesID);
@@ -45,65 +46,57 @@
             $('#editUtilitiesPicture').val(utilities.UtilitiesPicture);
             $('#btn-delete').show();
         }
+
         function showCreateForm() {
-            // Hiển thị form tạo mới và làm sạch giá trị
             $('#editFormContainer').show();
             $('#editUtilitiesID').val('0');
             $('#editUtilitiesName').val('');
             $('#editUtilitiesPicture').val('');
+            $('#btn-delete').hide(); // Hide delete button for new entry
         }
+
         function loadUtilities(dataTable) {
-    $.ajax({
-        url: '/Reception/Utilities/GetUtilities',
-        type: 'get',
-        success: function (data) {
-            if (data.code == 200) {
-                console.log(data);
+            $.ajax({
+                url: '/Reception/Utilities/GetUtilities',
+                type: 'get',
+                success: function (data) {
+                    if (data.code === 200) {
+                        console.log(data);
 
-                // Kiểm tra xem dataTable đã được khởi tạo chưa
-                if (dataTable) {
+                        if (dataTable) {
+                            dataTable.clear();
 
-                    // Xóa dòng cũ
-                    dataTable.clear();
+                            $.each(data.utilities, function (k, v) {
+                                let s = '<tr id="' + v.UtilitiesID + '">';
+                                s += '<td style="text-align: left;">' + v.UtilitiesName + '</td>';
+                                s += '<td>' + v.UtilitiesPicture + '</td>';
+                                s += '<td class="col-ms-3 text-right">';
+                                s += '<button class="btn btn-sm btn-warning" name="update" onclick="editUtilities(' + v.UtilitiesID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
+                                s += '</td>';
+                                s += '</tr>';
+                                dataTable.row.add($(s));
+                            });
 
-                    // Thêm dữ liệu mới
-                    $.each(data.utilities, function (k, v) {
-                        let s = '<tr id="' + v.UtilitiesID + '">';
-                        s += '<td style="text-align: left;">' + v.UtilitiesName + '</td>';
-                        s += '<td>' + v.UtilitiesPicture + '</td>';
-                        s += '<td class="col-ms-3 text-right">';
-                        s += '<button class="btn btn-sm btn-warning" name="update" onclick="editUtilities(' + v.UtilitiesID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
-                        s += '</td>';
-                        s += '</tr>';
-                        dataTable.row.add($(s));
-                    });
-
-                    // Tạo lại DataTable
-                    dataTable.draw();
+                            dataTable.draw();
+                        }
+                    }
                 }
-            }
+            });
         }
-    });
-    }
+
         $(document).ready(function () {
-
-
             loadUtilities(dataTable);
         });
-
-
-
-
 
         function deleteUtilities() {
             var utilitiesID = $('#editUtilitiesID').val();
 
             if (confirm('Bạn có chắc muốn xóa dịch vụ này không?')) {
                 $.ajax({
-                    url: '/Reception/Utilities/CheckAndDeleteUtilitiesID',
+                    url: '/Reception/Utilities/CheckAndDeleteUtilities',
                     type: 'post',
                     data: {
-                        utilitiesID: utilitiesID
+                        UtilitiesID: utilitiesID
                     },
                     success: function (data) {
                         if (data.code === 200) {
@@ -121,18 +114,15 @@
         }
 
         function editUtilities(id) {
-            console.log(id);
             $.ajax({
-                url: '/Reception/Utilities/GetUtilitiesTypeDetails',
+                url: '/Reception/Utilities/GetUtilitiesDetails',
                 type: 'get',
                 data: {
                     id: id
-
-
                 },
                 success: function (data) {
-                    if (data.code == 200) {
-                        showEditForm(data.roomType);
+                    if (data.code === 200) {
+                        showEditForm(data.utilities);
                     } else {
                         alert(data.msg);
                     }
@@ -144,38 +134,39 @@
             $('#editFormContainer').hide();
         }
 
+        function validateFormData() {
+            var editedUtilitiesID = $('#editUtilitiesID').val();
+            var editedUtilitiesName = $('#editUtilitiesName').val();
+            var editedUtilitiesPicture = $('#fFileUpload')[0].files[0];
+
+            return true; // You should implement your validation logic here
+        }
+
         function submitEditForm() {
-            function validateFormData() {
-                var editedUtilitiesID = $('#editUtilitiesID').val();
-                var editedUtilitiesName = $('#editUtilitiesName').val();
-                var editedUtilitiesPicture = $('#editUtilitiesPicture').val();
-
-
-                return true;
-            }
-
             if (!validateFormData()) {
                 return;
             }
 
             var editUtilitiesID = $('#editUtilitiesID').val();
             var editedUtilitiesName = $('#editUtilitiesName').val();
-            var editedUtilitiesPicture = $('#editUtilitiesPicture').val();
+            var editedUtilitiesPicture = $('#fFileUpload')[0].files[0];
             var actionUrl = '/Reception/Utilities/Edit';
 
             if (editUtilitiesID === '0') {
                 actionUrl = '/Reception/Utilities/CreateUtilities';
             }
 
+            var formData = new FormData();
+            formData.append('UtilitiesID', editUtilitiesID);
+            formData.append('UtilitiesName', editedUtilitiesName);
+            formData.append('UtilitiesPicture', editedUtilitiesPicture);
+
             $.ajax({
                 url: actionUrl,
                 type: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    UtilitiesID: editUtilitiesID,
-                    UtilitiesName: editedUtilitiesName,
-                    UtilitiesPicture: editedUtilitiesPicture,
-                }),
+                processData: false,
+                contentType: false,
+                data: formData,
                 success: function (data) {
                     if (data.code === 200) {
                         $('#editFormContainer').hide();
@@ -191,7 +182,8 @@
         }
     </script>
 }
-<button type="button" class="btn btn-success" onclick="showCreateForm()" style="width:80px"> Create</button>
+
+<button type="button" class="btn btn-success" onclick="showCreateForm()" style="width:80px">Create</button>
 
 <div class="table-and-form-container">
     <div class="table-responsive mgt" style="width:80%">
@@ -219,11 +211,10 @@
                 <input type="text" class="form-control" id="editUtilitiesName">
             </div>
             <div class="form-group">
-                <label for="editUtilitiesPicture">Hình dịch vụ:</label>
-                <input type="file" class="form-control" id="fFileUpload">
+                <label for="fFileUpload">Hình dịch vụ:</label>
+                <input type="file" class="form-control" id="fFileUpload" accept="image/*">
             </div>
 
-            <!-- Các nút để submit hoặc đóng form -->
             <button type="button" class="btn btn-primary" onclick="submitEditForm()">Submit</button>
             <button type="button" class="btn btn btn-danger" id="btn-delete" onclick="deleteUtilities()">Delete</button>
             <button type="button" class="btn btn-secondary" onclick="closeEditForm()">Close</button>
