@@ -33,33 +33,76 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                     })
                     .ToList();
 
-                return Json(new { code = 200, booking = booking, msg = "Lấy thông tin đặt phòng thành công" }, JsonRequestBehavior.AllowGet);
+                var bookingWithDetails = booking.Select(b => new
+                {
+                    BookingID = b.BookingID,
+                    BookingDate = b.BookingDate,
+                    CheckInDate = b.CheckInDate,
+                    CheckOutDate = b.CheckOutDate,
+                    RoomTypeID = b.RoomTypeID,
+                    PaymentStatus = b.PaymentStatus,
+                    CustomerID = b.CustomerID,
+                    TypeName = GetRoomTypeName(b.RoomTypeID ?? 0),
+                    FullName = GetCustomerFullName(b.CustomerID ?? 0)
+                });
+
+                return Json(new { code = 200, booking = bookingWithDetails, msg = "Lấy thông tin đặt phòng thành công" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception e)
             {
                 return Json(new { code = 500, msg = "Lấy thông tin đặt phòng thất bại: " + e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
-        //lấy nametype
-        /* public JsonResult GetNameType()
-          {
-              try
-              {
-                  var rooms = _db.ROOMTYPEs
-                      .Select(r => new
-                      {
-                          RoomTypeID = r.RoomTypeID,
-                          TypeName = r.TypeName,
 
-                      })
-                      .ToList();
-                  return Json(new { code = 200, rooms = rooms, msg = "Lấy danh sách loại phòng thành công" }, JsonRequestBehavior.AllowGet);
-              }
-              catch (Exception e)
-              {
-                  return Json(new { code = 500, msg = "Lấy danh loại sách phòng thất bại: " + e.Message }, JsonRequestBehavior.AllowGet);
-              }
-          }*/
+        public string GetRoomTypeName(int? roomTypeID)
+        {
+            try
+            {
+                if (roomTypeID.HasValue)
+                {
+                    var roomType = _db.ROOMTYPEs
+                        .Where(r => r.RoomTypeID == roomTypeID.Value)
+                        .Select(r => r.TypeName)
+                        .SingleOrDefault();
+
+                    return roomType ?? "Unknown";
+                }
+                else
+                {
+                    return "Unknown";
+                }
+            }
+            catch (Exception e)
+            {
+                return "Error: " + e.Message;
+            }
+        }
+
+        public string GetCustomerFullName(int? customerID)
+        {
+            try
+            {
+                if (customerID.HasValue)
+                {
+                    var customer = _db.CUSTOMERs
+                        .Where(c => c.CustomerID == customerID.Value)
+                        .Select(c => c.FullName)
+                        .SingleOrDefault();
+
+                    return customer ?? "Unknown";
+                }
+                else
+                {
+                    return "Unknown";
+                }
+            }
+            catch (Exception e)
+            {
+                return "Error: " + e.Message;
+            }
+        }
+
+
 
         [HttpPost]
         public JsonResult CreateBooking(int BookingID, DateTime BookingDate, DateTime CheckInDate, DateTime CheckOutDate, int RoomTypeID, string PaymentStatus, int CustomerID)

@@ -1,5 +1,3 @@
-C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.AssemblyReference.cache
-C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.CoreCompileInputs.cache
 C:\KhachSan\LuxuryHotel\bin\LuxuryHotel.dll.config
 C:\KhachSan\LuxuryHotel\bin\LuxuryHotel.dll
 C:\KhachSan\LuxuryHotel\bin\LuxuryHotel.pdb
@@ -61,6 +59,8 @@ C:\KhachSan\LuxuryHotel\bin\System.Web.WebPages.Deployment.xml
 C:\KhachSan\LuxuryHotel\bin\System.Web.WebPages.Razor.xml
 C:\KhachSan\LuxuryHotel\bin\System.Web.Optimization.xml
 C:\KhachSan\LuxuryHotel\bin\Antlr3.Runtime.pdb
+C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.AssemblyReference.cache
+C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.CoreCompileInputs.cache
 C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.CopyComplete
 C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.dll
 C:\KhachSan\LuxuryHotel\obj\Debug\LuxuryHotel.pdb
