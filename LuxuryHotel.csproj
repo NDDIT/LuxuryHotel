@@ -124,6 +124,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Reception\Controllers\BookingController.cs" />
     <Compile Include="Areas\Reception\Controllers\CheckIn_CheckOutController.cs" />
     <Compile Include="Areas\Reception\Controllers\CustomerController.cs" />
     <Compile Include="Areas\Reception\Controllers\ImageController.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Areas\Reception\Controllers\RoomController.cs" />
     <Compile Include="Areas\Reception\Controllers\ServiceController.cs" />
     <Compile Include="Areas\Reception\Controllers\StatisticController.cs" />
+    <Compile Include="Areas\Reception\Controllers\UtilitiesController.cs" />
     <Compile Include="Areas\Reception\ReceptionAreaRegistration.cs" />
     <Compile Include="Controllers\LuxuryHotelController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -2131,6 +2133,8 @@
     <Content Include="Areas\Reception\Views\Image\Edit.cshtml" />
     <Content Include="Areas\Reception\Views\CheckIn_CheckOut\Index.cshtml" />
     <Content Include="Areas\Reception\Views\Customer\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\Booking\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\Utilities\Index.cshtml" />
     <None Include="Models\db.dbml.layout">
       <DependentUpon>db.dbml</DependentUpon>
     </None>

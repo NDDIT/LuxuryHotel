@@ -30,18 +30,21 @@ namespace LuxuryHotel.Models
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertSERVICEREQUEST(SERVICEREQUEST instance);
-    partial void UpdateSERVICEREQUEST(SERVICEREQUEST instance);
-    partial void DeleteSERVICEREQUEST(SERVICEREQUEST instance);
     partial void InsertBOOKING(BOOKING instance);
     partial void UpdateBOOKING(BOOKING instance);
     partial void DeleteBOOKING(BOOKING instance);
     partial void InsertCHECKINROOM(CHECKINROOM instance);
     partial void UpdateCHECKINROOM(CHECKINROOM instance);
     partial void DeleteCHECKINROOM(CHECKINROOM instance);
+    partial void InsertCHECKOUTROOM(CHECKOUTROOM instance);
+    partial void UpdateCHECKOUTROOM(CHECKOUTROOM instance);
+    partial void DeleteCHECKOUTROOM(CHECKOUTROOM instance);
     partial void InsertCUSTOMER(CUSTOMER instance);
     partial void UpdateCUSTOMER(CUSTOMER instance);
     partial void DeleteCUSTOMER(CUSTOMER instance);
+    partial void InsertImage(Image instance);
+    partial void UpdateImage(Image instance);
+    partial void DeleteImage(Image instance);
     partial void InsertPAYMENT(PAYMENT instance);
     partial void UpdatePAYMENT(PAYMENT instance);
     partial void DeletePAYMENT(PAYMENT instance);
@@ -63,15 +66,12 @@ namespace LuxuryHotel.Models
     partial void InsertSERVICE(SERVICE instance);
     partial void UpdateSERVICE(SERVICE instance);
     partial void DeleteSERVICE(SERVICE instance);
+    partial void InsertSERVICEREQUEST(SERVICEREQUEST instance);
+    partial void UpdateSERVICEREQUEST(SERVICEREQUEST instance);
+    partial void DeleteSERVICEREQUEST(SERVICEREQUEST instance);
     partial void InsertUtility(Utility instance);
     partial void UpdateUtility(Utility instance);
     partial void DeleteUtility(Utility instance);
-    partial void InsertImage(Image instance);
-    partial void UpdateImage(Image instance);
-    partial void DeleteImage(Image instance);
-    partial void InsertCHECKOUTROOM(CHECKOUTROOM instance);
-    partial void UpdateCHECKOUTROOM(CHECKOUTROOM instance);
-    partial void DeleteCHECKOUTROOM(CHECKOUTROOM instance);
         #endregion
         public dbDataContext() :
                 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["LuxuryHotelConnectionString"].ConnectionString, mappingSource)
@@ -102,14 +102,6 @@ namespace LuxuryHotel.Models
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<SERVICEREQUEST> SERVICEREQUESTs
-		{
-			get
-			{
-				return this.GetTable<SERVICEREQUEST>();
-			}
-		}
-		
 		public System.Data.Linq.Table<BOOKING> BOOKINGs
 		{
 			get
@@ -126,11 +118,27 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
+		public System.Data.Linq.Table<CHECKOUTROOM> CHECKOUTROOMs
+		{
+			get
+			{
+				return this.GetTable<CHECKOUTROOM>();
+			}
+		}
+		
 		public System.Data.Linq.Table<CUSTOMER> CUSTOMERs
 		{
 			get
 			{
 				return this.GetTable<CUSTOMER>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Image> Images
+		{
+			get
+			{
+				return this.GetTable<Image>();
 			}
 		}
 		
@@ -190,315 +198,19 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
+		public System.Data.Linq.Table<SERVICEREQUEST> SERVICEREQUESTs
+		{
+			get
+			{
+				return this.GetTable<SERVICEREQUEST>();
+			}
+		}
+		
 		public System.Data.Linq.Table<Utility> Utilities
 		{
 			get
 			{
 				return this.GetTable<Utility>();
-			}
-		}
-		
-		public System.Data.Linq.Table<Image> Images
-		{
-			get
-			{
-				return this.GetTable<Image>();
-			}
-		}
-		
-		public System.Data.Linq.Table<CHECKOUTROOM> CHECKOUTROOMs
-		{
-			get
-			{
-				return this.GetTable<CHECKOUTROOM>();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SERVICEREQUEST")]
-	public partial class SERVICEREQUEST : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _RequestID;
-		
-		private System.Nullable<System.DateTime> _RequestDate;
-		
-		private System.Nullable<int> _CheckinID;
-		
-		private System.Nullable<int> _ServiceID;
-		
-		private string _Status;
-		
-		private string _Description;
-		
-		private System.Nullable<int> _ReceptionID;
-		
-		private EntityRef<CHECKINROOM> _CHECKINROOM;
-		
-		private EntityRef<SERVICE> _SERVICE;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnRequestIDChanging(int value);
-    partial void OnRequestIDChanged();
-    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnRequestDateChanged();
-    partial void OnCheckinIDChanging(System.Nullable<int> value);
-    partial void OnCheckinIDChanged();
-    partial void OnServiceIDChanging(System.Nullable<int> value);
-    partial void OnServiceIDChanged();
-    partial void OnStatusChanging(string value);
-    partial void OnStatusChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnReceptionIDChanging(System.Nullable<int> value);
-    partial void OnReceptionIDChanged();
-    #endregion
-		
-		public SERVICEREQUEST()
-		{
-			this._CHECKINROOM = default(EntityRef<CHECKINROOM>);
-			this._SERVICE = default(EntityRef<SERVICE>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int RequestID
-		{
-			get
-			{
-				return this._RequestID;
-			}
-			set
-			{
-				if ((this._RequestID != value))
-				{
-					this.OnRequestIDChanging(value);
-					this.SendPropertyChanging();
-					this._RequestID = value;
-					this.SendPropertyChanged("RequestID");
-					this.OnRequestIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="Date")]
-		public System.Nullable<System.DateTime> RequestDate
-		{
-			get
-			{
-				return this._RequestDate;
-			}
-			set
-			{
-				if ((this._RequestDate != value))
-				{
-					this.OnRequestDateChanging(value);
-					this.SendPropertyChanging();
-					this._RequestDate = value;
-					this.SendPropertyChanged("RequestDate");
-					this.OnRequestDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckinID", DbType="Int")]
-		public System.Nullable<int> CheckinID
-		{
-			get
-			{
-				return this._CheckinID;
-			}
-			set
-			{
-				if ((this._CheckinID != value))
-				{
-					if (this._CHECKINROOM.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCheckinIDChanging(value);
-					this.SendPropertyChanging();
-					this._CheckinID = value;
-					this.SendPropertyChanged("CheckinID");
-					this.OnCheckinIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ServiceID", DbType="Int")]
-		public System.Nullable<int> ServiceID
-		{
-			get
-			{
-				return this._ServiceID;
-			}
-			set
-			{
-				if ((this._ServiceID != value))
-				{
-					if (this._SERVICE.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnServiceIDChanging(value);
-					this.SendPropertyChanging();
-					this._ServiceID = value;
-					this.SendPropertyChanged("ServiceID");
-					this.OnServiceIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="NVarChar(50)")]
-		public string Status
-		{
-			get
-			{
-				return this._Status;
-			}
-			set
-			{
-				if ((this._Status != value))
-				{
-					this.OnStatusChanging(value);
-					this.SendPropertyChanging();
-					this._Status = value;
-					this.SendPropertyChanged("Status");
-					this.OnStatusChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="Text", UpdateCheck=UpdateCheck.Never)]
-		public string Description
-		{
-			get
-			{
-				return this._Description;
-			}
-			set
-			{
-				if ((this._Description != value))
-				{
-					this.OnDescriptionChanging(value);
-					this.SendPropertyChanging();
-					this._Description = value;
-					this.SendPropertyChanged("Description");
-					this.OnDescriptionChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceptionID", DbType="Int")]
-		public System.Nullable<int> ReceptionID
-		{
-			get
-			{
-				return this._ReceptionID;
-			}
-			set
-			{
-				if ((this._ReceptionID != value))
-				{
-					this.OnReceptionIDChanging(value);
-					this.SendPropertyChanging();
-					this._ReceptionID = value;
-					this.SendPropertyChanged("ReceptionID");
-					this.OnReceptionIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_SERVICEREQUEST", Storage="_CHECKINROOM", ThisKey="CheckinID", OtherKey="CheckinID", IsForeignKey=true)]
-		public CHECKINROOM CHECKINROOM
-		{
-			get
-			{
-				return this._CHECKINROOM.Entity;
-			}
-			set
-			{
-				CHECKINROOM previousValue = this._CHECKINROOM.Entity;
-				if (((previousValue != value) 
-							|| (this._CHECKINROOM.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CHECKINROOM.Entity = null;
-						previousValue.SERVICEREQUESTs.Remove(this);
-					}
-					this._CHECKINROOM.Entity = value;
-					if ((value != null))
-					{
-						value.SERVICEREQUESTs.Add(this);
-						this._CheckinID = value.CheckinID;
-					}
-					else
-					{
-						this._CheckinID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("CHECKINROOM");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SERVICE_SERVICEREQUEST", Storage="_SERVICE", ThisKey="ServiceID", OtherKey="ServiceID", IsForeignKey=true)]
-		public SERVICE SERVICE
-		{
-			get
-			{
-				return this._SERVICE.Entity;
-			}
-			set
-			{
-				SERVICE previousValue = this._SERVICE.Entity;
-				if (((previousValue != value) 
-							|| (this._SERVICE.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._SERVICE.Entity = null;
-						previousValue.SERVICEREQUESTs.Remove(this);
-					}
-					this._SERVICE.Entity = value;
-					if ((value != null))
-					{
-						value.SERVICEREQUESTs.Add(this);
-						this._ServiceID = value.ServiceID;
-					}
-					else
-					{
-						this._ServiceID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("SERVICE");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
@@ -835,11 +547,11 @@ namespace LuxuryHotel.Models
 		
 		private System.Nullable<int> _ReceptionID;
 		
-		private EntitySet<SERVICEREQUEST> _SERVICEREQUESTs;
+		private EntitySet<CHECKOUTROOM> _CHECKOUTROOMs;
 		
 		private EntitySet<PAYMENT> _PAYMENTs;
 		
-		private EntitySet<CHECKOUTROOM> _CHECKOUTROOMs;
+		private EntitySet<SERVICEREQUEST> _SERVICEREQUESTs;
 		
 		private EntityRef<BOOKING> _BOOKING;
 		
@@ -863,9 +575,9 @@ namespace LuxuryHotel.Models
 		
 		public CHECKINROOM()
 		{
-			this._SERVICEREQUESTs = new EntitySet<SERVICEREQUEST>(new Action<SERVICEREQUEST>(this.attach_SERVICEREQUESTs), new Action<SERVICEREQUEST>(this.detach_SERVICEREQUESTs));
-			this._PAYMENTs = new EntitySet<PAYMENT>(new Action<PAYMENT>(this.attach_PAYMENTs), new Action<PAYMENT>(this.detach_PAYMENTs));
 			this._CHECKOUTROOMs = new EntitySet<CHECKOUTROOM>(new Action<CHECKOUTROOM>(this.attach_CHECKOUTROOMs), new Action<CHECKOUTROOM>(this.detach_CHECKOUTROOMs));
+			this._PAYMENTs = new EntitySet<PAYMENT>(new Action<PAYMENT>(this.attach_PAYMENTs), new Action<PAYMENT>(this.detach_PAYMENTs));
+			this._SERVICEREQUESTs = new EntitySet<SERVICEREQUEST>(new Action<SERVICEREQUEST>(this.attach_SERVICEREQUESTs), new Action<SERVICEREQUEST>(this.detach_SERVICEREQUESTs));
 			this._BOOKING = default(EntityRef<BOOKING>);
 			this._RECEPTION = default(EntityRef<RECEPTION>);
 			OnCreated();
@@ -979,16 +691,16 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_SERVICEREQUEST", Storage="_SERVICEREQUESTs", ThisKey="CheckinID", OtherKey="CheckinID")]
-		public EntitySet<SERVICEREQUEST> SERVICEREQUESTs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_CHECKOUTROOM", Storage="_CHECKOUTROOMs", ThisKey="CheckinID", OtherKey="CheckinID")]
+		public EntitySet<CHECKOUTROOM> CHECKOUTROOMs
 		{
 			get
 			{
-				return this._SERVICEREQUESTs;
+				return this._CHECKOUTROOMs;
 			}
 			set
 			{
-				this._SERVICEREQUESTs.Assign(value);
+				this._CHECKOUTROOMs.Assign(value);
 			}
 		}
 		
@@ -1005,16 +717,16 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_CHECKOUTROOM", Storage="_CHECKOUTROOMs", ThisKey="CheckinID", OtherKey="CheckinID")]
-		public EntitySet<CHECKOUTROOM> CHECKOUTROOMs
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_SERVICEREQUEST", Storage="_SERVICEREQUESTs", ThisKey="CheckinID", OtherKey="CheckinID")]
+		public EntitySet<SERVICEREQUEST> SERVICEREQUESTs
 		{
 			get
 			{
-				return this._CHECKOUTROOMs;
+				return this._SERVICEREQUESTs;
 			}
 			set
 			{
-				this._CHECKOUTROOMs.Assign(value);
+				this._SERVICEREQUESTs.Assign(value);
 			}
 		}
 		
@@ -1106,13 +818,13 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
-		private void attach_SERVICEREQUESTs(SERVICEREQUEST entity)
+		private void attach_CHECKOUTROOMs(CHECKOUTROOM entity)
 		{
 			this.SendPropertyChanging();
 			entity.CHECKINROOM = this;
 		}
 		
-		private void detach_SERVICEREQUESTs(SERVICEREQUEST entity)
+		private void detach_CHECKOUTROOMs(CHECKOUTROOM entity)
 		{
 			this.SendPropertyChanging();
 			entity.CHECKINROOM = null;
@@ -1130,16 +842,191 @@ namespace LuxuryHotel.Models
 			entity.CHECKINROOM = null;
 		}
 		
-		private void attach_CHECKOUTROOMs(CHECKOUTROOM entity)
+		private void attach_SERVICEREQUESTs(SERVICEREQUEST entity)
 		{
 			this.SendPropertyChanging();
 			entity.CHECKINROOM = this;
 		}
 		
-		private void detach_CHECKOUTROOMs(CHECKOUTROOM entity)
+		private void detach_SERVICEREQUESTs(SERVICEREQUEST entity)
 		{
 			this.SendPropertyChanging();
 			entity.CHECKINROOM = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CHECKOUTROOM")]
+	public partial class CHECKOUTROOM : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _CheckoutID;
+		
+		private System.Nullable<int> _CheckinID;
+		
+		private System.Nullable<System.DateTime> _CheckoutDate;
+		
+		private System.Nullable<int> _Toltal;
+		
+		private EntityRef<CHECKINROOM> _CHECKINROOM;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCheckoutIDChanging(int value);
+    partial void OnCheckoutIDChanged();
+    partial void OnCheckinIDChanging(System.Nullable<int> value);
+    partial void OnCheckinIDChanged();
+    partial void OnCheckoutDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnCheckoutDateChanged();
+    partial void OnToltalChanging(System.Nullable<int> value);
+    partial void OnToltalChanged();
+    #endregion
+		
+		public CHECKOUTROOM()
+		{
+			this._CHECKINROOM = default(EntityRef<CHECKINROOM>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckoutID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int CheckoutID
+		{
+			get
+			{
+				return this._CheckoutID;
+			}
+			set
+			{
+				if ((this._CheckoutID != value))
+				{
+					this.OnCheckoutIDChanging(value);
+					this.SendPropertyChanging();
+					this._CheckoutID = value;
+					this.SendPropertyChanged("CheckoutID");
+					this.OnCheckoutIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckinID", DbType="Int")]
+		public System.Nullable<int> CheckinID
+		{
+			get
+			{
+				return this._CheckinID;
+			}
+			set
+			{
+				if ((this._CheckinID != value))
+				{
+					if (this._CHECKINROOM.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCheckinIDChanging(value);
+					this.SendPropertyChanging();
+					this._CheckinID = value;
+					this.SendPropertyChanged("CheckinID");
+					this.OnCheckinIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckoutDate", DbType="DateTime")]
+		public System.Nullable<System.DateTime> CheckoutDate
+		{
+			get
+			{
+				return this._CheckoutDate;
+			}
+			set
+			{
+				if ((this._CheckoutDate != value))
+				{
+					this.OnCheckoutDateChanging(value);
+					this.SendPropertyChanging();
+					this._CheckoutDate = value;
+					this.SendPropertyChanged("CheckoutDate");
+					this.OnCheckoutDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Toltal", DbType="Int")]
+		public System.Nullable<int> Toltal
+		{
+			get
+			{
+				return this._Toltal;
+			}
+			set
+			{
+				if ((this._Toltal != value))
+				{
+					this.OnToltalChanging(value);
+					this.SendPropertyChanging();
+					this._Toltal = value;
+					this.SendPropertyChanged("Toltal");
+					this.OnToltalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_CHECKOUTROOM", Storage="_CHECKINROOM", ThisKey="CheckinID", OtherKey="CheckinID", IsForeignKey=true)]
+		public CHECKINROOM CHECKINROOM
+		{
+			get
+			{
+				return this._CHECKINROOM.Entity;
+			}
+			set
+			{
+				CHECKINROOM previousValue = this._CHECKINROOM.Entity;
+				if (((previousValue != value) 
+							|| (this._CHECKINROOM.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CHECKINROOM.Entity = null;
+						previousValue.CHECKOUTROOMs.Remove(this);
+					}
+					this._CHECKINROOM.Entity = value;
+					if ((value != null))
+					{
+						value.CHECKOUTROOMs.Add(this);
+						this._CheckinID = value.CheckinID;
+					}
+					else
+					{
+						this._CheckinID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("CHECKINROOM");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
@@ -1378,6 +1265,181 @@ namespace LuxuryHotel.Models
 		{
 			this.SendPropertyChanging();
 			entity.CUSTOMER = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Images")]
+	public partial class Image : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ImageID;
+		
+		private int _RoomID;
+		
+		private string _ImagePath;
+		
+		private System.Nullable<int> _OderID;
+		
+		private EntityRef<ROOM> _ROOM;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnImageIDChanging(int value);
+    partial void OnImageIDChanged();
+    partial void OnRoomIDChanging(int value);
+    partial void OnRoomIDChanged();
+    partial void OnImagePathChanging(string value);
+    partial void OnImagePathChanged();
+    partial void OnOderIDChanging(System.Nullable<int> value);
+    partial void OnOderIDChanged();
+    #endregion
+		
+		public Image()
+		{
+			this._ROOM = default(EntityRef<ROOM>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ImageID
+		{
+			get
+			{
+				return this._ImageID;
+			}
+			set
+			{
+				if ((this._ImageID != value))
+				{
+					this.OnImageIDChanging(value);
+					this.SendPropertyChanging();
+					this._ImageID = value;
+					this.SendPropertyChanged("ImageID");
+					this.OnImageIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL")]
+		public int RoomID
+		{
+			get
+			{
+				return this._RoomID;
+			}
+			set
+			{
+				if ((this._RoomID != value))
+				{
+					if (this._ROOM.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnRoomIDChanging(value);
+					this.SendPropertyChanging();
+					this._RoomID = value;
+					this.SendPropertyChanged("RoomID");
+					this.OnRoomIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImagePath", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string ImagePath
+		{
+			get
+			{
+				return this._ImagePath;
+			}
+			set
+			{
+				if ((this._ImagePath != value))
+				{
+					this.OnImagePathChanging(value);
+					this.SendPropertyChanging();
+					this._ImagePath = value;
+					this.SendPropertyChanged("ImagePath");
+					this.OnImagePathChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OderID", DbType="Int")]
+		public System.Nullable<int> OderID
+		{
+			get
+			{
+				return this._OderID;
+			}
+			set
+			{
+				if ((this._OderID != value))
+				{
+					this.OnOderIDChanging(value);
+					this.SendPropertyChanging();
+					this._OderID = value;
+					this.SendPropertyChanged("OderID");
+					this.OnOderIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_ROOM", ThisKey="RoomID", OtherKey="RoomID", IsForeignKey=true)]
+		public ROOM ROOM
+		{
+			get
+			{
+				return this._ROOM.Entity;
+			}
+			set
+			{
+				ROOM previousValue = this._ROOM.Entity;
+				if (((previousValue != value) 
+							|| (this._ROOM.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ROOM.Entity = null;
+						previousValue.Images.Remove(this);
+					}
+					this._ROOM.Entity = value;
+					if ((value != null))
+					{
+						value.Images.Add(this);
+						this._RoomID = value.RoomID;
+					}
+					else
+					{
+						this._RoomID = default(int);
+					}
+					this.SendPropertyChanged("ROOM");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 	
@@ -2094,11 +2156,11 @@ namespace LuxuryHotel.Models
 		
 		private string _Area;
 		
+		private EntitySet<Image> _Images;
+		
 		private EntitySet<REVIEW> _REVIEWs;
 		
 		private EntitySet<RoomUtility> _RoomUtilities;
-		
-		private EntitySet<Image> _Images;
 		
 		private EntityRef<ROOMTYPE> _ROOMTYPE;
 		
@@ -2120,9 +2182,9 @@ namespace LuxuryHotel.Models
 		
 		public ROOM()
 		{
+			this._Images = new EntitySet<Image>(new Action<Image>(this.attach_Images), new Action<Image>(this.detach_Images));
 			this._REVIEWs = new EntitySet<REVIEW>(new Action<REVIEW>(this.attach_REVIEWs), new Action<REVIEW>(this.detach_REVIEWs));
 			this._RoomUtilities = new EntitySet<RoomUtility>(new Action<RoomUtility>(this.attach_RoomUtilities), new Action<RoomUtility>(this.detach_RoomUtilities));
-			this._Images = new EntitySet<Image>(new Action<Image>(this.attach_Images), new Action<Image>(this.detach_Images));
 			this._ROOMTYPE = default(EntityRef<ROOMTYPE>);
 			OnCreated();
 		}
@@ -2231,6 +2293,19 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_Images", ThisKey="RoomID", OtherKey="RoomID")]
+		public EntitySet<Image> Images
+		{
+			get
+			{
+				return this._Images;
+			}
+			set
+			{
+				this._Images.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_REVIEW", Storage="_REVIEWs", ThisKey="RoomID", OtherKey="RoomID")]
 		public EntitySet<REVIEW> REVIEWs
 		{
@@ -2254,19 +2329,6 @@ namespace LuxuryHotel.Models
 			set
 			{
 				this._RoomUtilities.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_Images", ThisKey="RoomID", OtherKey="RoomID")]
-		public EntitySet<Image> Images
-		{
-			get
-			{
-				return this._Images;
-			}
-			set
-			{
-				this._Images.Assign(value);
 			}
 		}
 		
@@ -2324,6 +2386,18 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
+		private void attach_Images(Image entity)
+		{
+			this.SendPropertyChanging();
+			entity.ROOM = this;
+		}
+		
+		private void detach_Images(Image entity)
+		{
+			this.SendPropertyChanging();
+			entity.ROOM = null;
+		}
+		
 		private void attach_REVIEWs(REVIEW entity)
 		{
 			this.SendPropertyChanging();
@@ -2343,18 +2417,6 @@ namespace LuxuryHotel.Models
 		}
 		
 		private void detach_RoomUtilities(RoomUtility entity)
-		{
-			this.SendPropertyChanging();
-			entity.ROOM = null;
-		}
-		
-		private void attach_Images(Image entity)
-		{
-			this.SendPropertyChanging();
-			entity.ROOM = this;
-		}
-		
-		private void detach_Images(Image entity)
 		{
 			this.SendPropertyChanging();
 			entity.ROOM = null;
@@ -2929,6 +2991,294 @@ namespace LuxuryHotel.Models
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SERVICEREQUEST")]
+	public partial class SERVICEREQUEST : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _RequestID;
+		
+		private System.Nullable<System.DateTime> _RequestDate;
+		
+		private System.Nullable<int> _CheckinID;
+		
+		private System.Nullable<int> _ServiceID;
+		
+		private string _Status;
+		
+		private string _Description;
+		
+		private System.Nullable<int> _ReceptionID;
+		
+		private EntityRef<CHECKINROOM> _CHECKINROOM;
+		
+		private EntityRef<SERVICE> _SERVICE;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnRequestIDChanging(int value);
+    partial void OnRequestIDChanged();
+    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnRequestDateChanged();
+    partial void OnCheckinIDChanging(System.Nullable<int> value);
+    partial void OnCheckinIDChanged();
+    partial void OnServiceIDChanging(System.Nullable<int> value);
+    partial void OnServiceIDChanged();
+    partial void OnStatusChanging(string value);
+    partial void OnStatusChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnReceptionIDChanging(System.Nullable<int> value);
+    partial void OnReceptionIDChanged();
+    #endregion
+		
+		public SERVICEREQUEST()
+		{
+			this._CHECKINROOM = default(EntityRef<CHECKINROOM>);
+			this._SERVICE = default(EntityRef<SERVICE>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int RequestID
+		{
+			get
+			{
+				return this._RequestID;
+			}
+			set
+			{
+				if ((this._RequestID != value))
+				{
+					this.OnRequestIDChanging(value);
+					this.SendPropertyChanging();
+					this._RequestID = value;
+					this.SendPropertyChanged("RequestID");
+					this.OnRequestIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="Date")]
+		public System.Nullable<System.DateTime> RequestDate
+		{
+			get
+			{
+				return this._RequestDate;
+			}
+			set
+			{
+				if ((this._RequestDate != value))
+				{
+					this.OnRequestDateChanging(value);
+					this.SendPropertyChanging();
+					this._RequestDate = value;
+					this.SendPropertyChanged("RequestDate");
+					this.OnRequestDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckinID", DbType="Int")]
+		public System.Nullable<int> CheckinID
+		{
+			get
+			{
+				return this._CheckinID;
+			}
+			set
+			{
+				if ((this._CheckinID != value))
+				{
+					if (this._CHECKINROOM.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCheckinIDChanging(value);
+					this.SendPropertyChanging();
+					this._CheckinID = value;
+					this.SendPropertyChanged("CheckinID");
+					this.OnCheckinIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ServiceID", DbType="Int")]
+		public System.Nullable<int> ServiceID
+		{
+			get
+			{
+				return this._ServiceID;
+			}
+			set
+			{
+				if ((this._ServiceID != value))
+				{
+					if (this._SERVICE.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnServiceIDChanging(value);
+					this.SendPropertyChanging();
+					this._ServiceID = value;
+					this.SendPropertyChanged("ServiceID");
+					this.OnServiceIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="NVarChar(50)")]
+		public string Status
+		{
+			get
+			{
+				return this._Status;
+			}
+			set
+			{
+				if ((this._Status != value))
+				{
+					this.OnStatusChanging(value);
+					this.SendPropertyChanging();
+					this._Status = value;
+					this.SendPropertyChanged("Status");
+					this.OnStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="Text", UpdateCheck=UpdateCheck.Never)]
+		public string Description
+		{
+			get
+			{
+				return this._Description;
+			}
+			set
+			{
+				if ((this._Description != value))
+				{
+					this.OnDescriptionChanging(value);
+					this.SendPropertyChanging();
+					this._Description = value;
+					this.SendPropertyChanged("Description");
+					this.OnDescriptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceptionID", DbType="Int")]
+		public System.Nullable<int> ReceptionID
+		{
+			get
+			{
+				return this._ReceptionID;
+			}
+			set
+			{
+				if ((this._ReceptionID != value))
+				{
+					this.OnReceptionIDChanging(value);
+					this.SendPropertyChanging();
+					this._ReceptionID = value;
+					this.SendPropertyChanged("ReceptionID");
+					this.OnReceptionIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_SERVICEREQUEST", Storage="_CHECKINROOM", ThisKey="CheckinID", OtherKey="CheckinID", IsForeignKey=true)]
+		public CHECKINROOM CHECKINROOM
+		{
+			get
+			{
+				return this._CHECKINROOM.Entity;
+			}
+			set
+			{
+				CHECKINROOM previousValue = this._CHECKINROOM.Entity;
+				if (((previousValue != value) 
+							|| (this._CHECKINROOM.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._CHECKINROOM.Entity = null;
+						previousValue.SERVICEREQUESTs.Remove(this);
+					}
+					this._CHECKINROOM.Entity = value;
+					if ((value != null))
+					{
+						value.SERVICEREQUESTs.Add(this);
+						this._CheckinID = value.CheckinID;
+					}
+					else
+					{
+						this._CheckinID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("CHECKINROOM");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SERVICE_SERVICEREQUEST", Storage="_SERVICE", ThisKey="ServiceID", OtherKey="ServiceID", IsForeignKey=true)]
+		public SERVICE SERVICE
+		{
+			get
+			{
+				return this._SERVICE.Entity;
+			}
+			set
+			{
+				SERVICE previousValue = this._SERVICE.Entity;
+				if (((previousValue != value) 
+							|| (this._SERVICE.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._SERVICE.Entity = null;
+						previousValue.SERVICEREQUESTs.Remove(this);
+					}
+					this._SERVICE.Entity = value;
+					if ((value != null))
+					{
+						value.SERVICEREQUESTs.Add(this);
+						this._ServiceID = value.ServiceID;
+					}
+					else
+					{
+						this._ServiceID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("SERVICE");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Utilities")]
 	public partial class Utility : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -3064,356 +3414,6 @@ namespace LuxuryHotel.Models
 		{
 			this.SendPropertyChanging();
 			entity.Utility = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Images")]
-	public partial class Image : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ImageID;
-		
-		private int _RoomID;
-		
-		private string _ImagePath;
-		
-		private System.Nullable<int> _OderID;
-		
-		private EntityRef<ROOM> _ROOM;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnImageIDChanging(int value);
-    partial void OnImageIDChanged();
-    partial void OnRoomIDChanging(int value);
-    partial void OnRoomIDChanged();
-    partial void OnImagePathChanging(string value);
-    partial void OnImagePathChanged();
-    partial void OnOderIDChanging(System.Nullable<int> value);
-    partial void OnOderIDChanged();
-    #endregion
-		
-		public Image()
-		{
-			this._ROOM = default(EntityRef<ROOM>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ImageID
-		{
-			get
-			{
-				return this._ImageID;
-			}
-			set
-			{
-				if ((this._ImageID != value))
-				{
-					this.OnImageIDChanging(value);
-					this.SendPropertyChanging();
-					this._ImageID = value;
-					this.SendPropertyChanged("ImageID");
-					this.OnImageIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL")]
-		public int RoomID
-		{
-			get
-			{
-				return this._RoomID;
-			}
-			set
-			{
-				if ((this._RoomID != value))
-				{
-					if (this._ROOM.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnRoomIDChanging(value);
-					this.SendPropertyChanging();
-					this._RoomID = value;
-					this.SendPropertyChanged("RoomID");
-					this.OnRoomIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImagePath", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string ImagePath
-		{
-			get
-			{
-				return this._ImagePath;
-			}
-			set
-			{
-				if ((this._ImagePath != value))
-				{
-					this.OnImagePathChanging(value);
-					this.SendPropertyChanging();
-					this._ImagePath = value;
-					this.SendPropertyChanged("ImagePath");
-					this.OnImagePathChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OderID", DbType="Int")]
-		public System.Nullable<int> OderID
-		{
-			get
-			{
-				return this._OderID;
-			}
-			set
-			{
-				if ((this._OderID != value))
-				{
-					this.OnOderIDChanging(value);
-					this.SendPropertyChanging();
-					this._OderID = value;
-					this.SendPropertyChanged("OderID");
-					this.OnOderIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_ROOM", ThisKey="RoomID", OtherKey="RoomID", IsForeignKey=true)]
-		public ROOM ROOM
-		{
-			get
-			{
-				return this._ROOM.Entity;
-			}
-			set
-			{
-				ROOM previousValue = this._ROOM.Entity;
-				if (((previousValue != value) 
-							|| (this._ROOM.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ROOM.Entity = null;
-						previousValue.Images.Remove(this);
-					}
-					this._ROOM.Entity = value;
-					if ((value != null))
-					{
-						value.Images.Add(this);
-						this._RoomID = value.RoomID;
-					}
-					else
-					{
-						this._RoomID = default(int);
-					}
-					this.SendPropertyChanged("ROOM");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CHECKOUTROOM")]
-	public partial class CHECKOUTROOM : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _CheckoutID;
-		
-		private System.Nullable<int> _CheckinID;
-		
-		private System.Nullable<System.DateTime> _CheckoutDate;
-		
-		private System.Nullable<int> _Toltal;
-		
-		private EntityRef<CHECKINROOM> _CHECKINROOM;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnCheckoutIDChanging(int value);
-    partial void OnCheckoutIDChanged();
-    partial void OnCheckinIDChanging(System.Nullable<int> value);
-    partial void OnCheckinIDChanged();
-    partial void OnCheckoutDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnCheckoutDateChanged();
-    partial void OnToltalChanging(System.Nullable<int> value);
-    partial void OnToltalChanged();
-    #endregion
-		
-		public CHECKOUTROOM()
-		{
-			this._CHECKINROOM = default(EntityRef<CHECKINROOM>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckoutID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int CheckoutID
-		{
-			get
-			{
-				return this._CheckoutID;
-			}
-			set
-			{
-				if ((this._CheckoutID != value))
-				{
-					this.OnCheckoutIDChanging(value);
-					this.SendPropertyChanging();
-					this._CheckoutID = value;
-					this.SendPropertyChanged("CheckoutID");
-					this.OnCheckoutIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckinID", DbType="Int")]
-		public System.Nullable<int> CheckinID
-		{
-			get
-			{
-				return this._CheckinID;
-			}
-			set
-			{
-				if ((this._CheckinID != value))
-				{
-					if (this._CHECKINROOM.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnCheckinIDChanging(value);
-					this.SendPropertyChanging();
-					this._CheckinID = value;
-					this.SendPropertyChanged("CheckinID");
-					this.OnCheckinIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckoutDate", DbType="DateTime")]
-		public System.Nullable<System.DateTime> CheckoutDate
-		{
-			get
-			{
-				return this._CheckoutDate;
-			}
-			set
-			{
-				if ((this._CheckoutDate != value))
-				{
-					this.OnCheckoutDateChanging(value);
-					this.SendPropertyChanging();
-					this._CheckoutDate = value;
-					this.SendPropertyChanged("CheckoutDate");
-					this.OnCheckoutDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Toltal", DbType="Int")]
-		public System.Nullable<int> Toltal
-		{
-			get
-			{
-				return this._Toltal;
-			}
-			set
-			{
-				if ((this._Toltal != value))
-				{
-					this.OnToltalChanging(value);
-					this.SendPropertyChanging();
-					this._Toltal = value;
-					this.SendPropertyChanged("Toltal");
-					this.OnToltalChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="CHECKINROOM_CHECKOUTROOM", Storage="_CHECKINROOM", ThisKey="CheckinID", OtherKey="CheckinID", IsForeignKey=true)]
-		public CHECKINROOM CHECKINROOM
-		{
-			get
-			{
-				return this._CHECKINROOM.Entity;
-			}
-			set
-			{
-				CHECKINROOM previousValue = this._CHECKINROOM.Entity;
-				if (((previousValue != value) 
-							|| (this._CHECKINROOM.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._CHECKINROOM.Entity = null;
-						previousValue.CHECKOUTROOMs.Remove(this);
-					}
-					this._CHECKINROOM.Entity = value;
-					if ((value != null))
-					{
-						value.CHECKOUTROOMs.Add(this);
-						this._CheckinID = value.CheckinID;
-					}
-					else
-					{
-						this._CheckinID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("CHECKINROOM");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 }
