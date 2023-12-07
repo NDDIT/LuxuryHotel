@@ -21,14 +21,15 @@
         }
 
         #editFormContainer {
-            width: 30%;
+            width: 27%;
             display: none;
         }
 
         .row {
             width: calc(100% - 30%);
-            text-align: right;
+            text-align: center;
         }
+        
     </style>
 }
 
@@ -41,25 +42,29 @@
         function showEditForm(booking) {
             $('#editFormContainer').show();
             $('#editBookingID').val(booking.BookingID);
-            $('#editBookingDate').val(booking.BookingDate);
-            $('#editCheckInDate').val(booking.CheckInDate);
-            $('#editCheckOutDate').val(booking.CheckOutDate);
-            $('#editRoomTypeID').val(booking.RoomTypeID);
+            var BookingDateObj = parseJsonDateString(booking.BookingDate);
+            var formattedBookingDate = formatDateForInput(BookingDateObj);
+            $('#editBookingDate').val(formattedBookingDate);
+            var checkinDateObj = parseJsonDateString(booking.CheckInDate);
+            var formattedCheckinDate = formatDateForInput(checkinDateObj);
+            $('#editCheckInDate').val(formattedCheckinDate);
+            var CheckOutDateObj = parseJsonDateString(booking.CheckOutDate);
+            var formattedCheckOutDate = formatDateForInput(CheckOutDateObj);
+            $('#editCheckOutDate').val(formattedCheckOutDate);
+            $('#editRoomID').val(booking.RoomID);
             $('#editPaymentStatus').val(booking.PaymentStatus);
             $('#editCustomerID').val(booking.CustomerID);
             $('#btn-delete').show();
         }
-
+        
         function showCreateForm() {
-
-
             // Hiển thị form tạo mới và làm sạch giá trị
             $('#editFormContainer').show();
             $('#editBookingID').val('0');
             $('#editBookingDate').val('');
             $('#editCheckInDate').val('');
             $('#editCheckOutDate').val('');
-           $('#editRoomTypeID').val('');
+           $('#editRoomID').val('');
             $('#editPaymentStatus').val('');
            $('#editCustomerID').val('');
             $('#btn-delete').hide();
@@ -70,7 +75,7 @@
         type: 'get',
         success: function (data) {
             if (data.code == 200) {
-                
+                console.log(data);
 
                 // Kiểm tra xem dataTable đã được khởi tạo chưa
                 if (dataTable) {
@@ -85,13 +90,16 @@
                         s += '<td style="text-align: left;">' + formatDateForInput(parseJsonDateString(v.BookingDate))  + '</td>';
                         s += '<td>' + formatDateForInput(parseJsonDateString(v.CheckInDate))  + '</td>';
                         s += '<td>' + formatDateForInput(parseJsonDateString(v.CheckOutDate)) + '</td>';
-                        s += '<td>' + v.RoomTypeID + '</td>'; // Hiển thị Loại phòng
                         s += '<td>' + v.TypeName + '</td>'; // Hiển thị Loại phòng
                         s += '<td>' + v.PaymentStatus + '</td>';
-                        s += '<td>' + v.CustomerID + '</td>'; // Hiển thị Loại phòng
-                        s += '<td>' + v.FullName + '</td>'; // Hiển thị Khách hàng
+                        s += '<td>' + v.CustomerID + '</td>'; 
+                        s += '<td>' + v.FullName + '</td>'
                         s += '<td class="col-ms-3 text-right">';
-                        s += '<button class="btn btn-sm btn-warning" name="update" onclick="editBooking(' + v.BookingID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
+                        if (v.PaymentStatus !== 'Paid and Checkin' && v.PaymentStatus !== 'UnPaid and Checkin') {
+                            s += '<button class="btn btn-sm btn-warning" name="update" onclick="editBooking(' + v.BookingID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
+                            s += '<button class="btn btn-sm btn-primary" name="checkin" onclick="checkin(' + v.BookingID + ')"><i class="fa fa-pen-square" aria-hidden="true"></i></button>&nbsp';
+                        }
+                       
                         s += '</td>';
                         s += '</tr>';
                         dataTable.row.add($(s));
@@ -191,10 +199,10 @@
             var editedBookingDate = new Date($('#editBookingDate').val()).toISOString();
             var editedCheckInDate = new Date($('#editCheckInDate').val()).toISOString();
             var editedCheckOutDate = new Date($('#editCheckOutDate').val()).toISOString();
-            var editedRoomTypeID = parseInt($('#editRoomTypeID').val());
+            var editedRoomID = parseInt($('#editRoomID').val());
             var editedPaymentStatus = $('#editPaymentStatus').val();
             var editedCustomerID = parseInt($('#editCustomerID').val());
-            console.log(editedRoomTypeID);
+            console.log(editedBookingDate);
             var actionUrl = '/Reception/Booking/Edit';
 
             if (editedBookingID === '0') {
@@ -210,7 +218,7 @@
                     BookingDate: editedBookingDate,
                     CheckInDate: editedCheckInDate,
                     CheckOutDate: editedCheckOutDate,
-                    RoomTypeID: editedRoomTypeID,
+                    RoomID: editedRoomID,
                     PaymentStatus: editedPaymentStatus,
                     CustomerID: editedCustomerID
                 }),
@@ -227,20 +235,37 @@
                 }
             });
         }
+        function checkin(BookingID) {
+   
+            $.ajax({
+                url: '/Reception/Booking/checkin',
+                type: 'POST',
+                data: {
+                    BookingID: BookingID
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        loadBooking(dataTable);
+                        alert('Nhận Phòng thành công')
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
     </script>
 }
 <button type="button" class="btn btn-success" onclick="showCreateForm()" style="width:80px">Create</button>
 
 <div class="table-and-form-container">
-    <div class="table-responsive mgt" style="width:80%">
+    <div class="table-responsive mgt" style="width:70%">
         <table id="tblBooking" class="table table-striped" width="100%" cellspacing="0">
             <thead>
                 <tr>
                     <th>Ngày đặt phòng</th>
                     <th>Ngày nhận phòng</th>
                     <th>Ngày trả phòng</th>
-                    <th>ID Loại phòng</th>
-                    <th>Loại phòng</th> <!-- Cột mới -->
+                    <th>Phòng</th> <!-- Cột mới -->
                     <th>Phương thức thanh toán</th>
                     <th>ID Khách hàng</th>
                     <th>Khách hàng</th> <!-- Cột mới -->
@@ -272,8 +297,8 @@
                 <input type="datetime-local" class="form-control" id="editCheckOutDate">
             </div>
             <div class="form-group">
-                <label for="editRoomTypeID">ID Loại phong:</label>
-                <input type="number" class="form-control" id="editRoomTypeID">
+                <label for="editRoomID">ID  phong:</label>
+                <input type="number" class="form-control" id="editRoomID">
             </div>
             <div class="form-group">
                 <label for="editPaymentStatus">Phương thức thanh toán:</label>

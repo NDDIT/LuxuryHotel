@@ -13,6 +13,10 @@ namespace LuxuryHotel.Areas.Reception.Controllers
         // GET: Reception/Booking
         public ActionResult Index()
         {
+            ViewBag.RoomNames = new SelectList(_db.ROOMs.ToList().OrderBy(n => n.RoomName), "RoomID", "RoomName");
+            ViewBag.Statuses = new SelectList(new List<string> { "Paid", "UnPaid", "Paid and Checked in", "UnPaid and Checked in" });
+            ViewBag.CustomerNames = new SelectList(_db.CUSTOMERs.ToList().OrderBy(n => n.CustomerID), "CustomerID", "FullName");
+
             return View();
         }
         [HttpGet]
@@ -27,7 +31,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                         BookingDate = r.BookingDate,
                         CheckInDate = r.CheckInDate,
                         CheckOutDate = r.CheckOutDate,
-                        RoomTypeID = r.RoomTypeID,
+                        RoomID = r.RoomID,
                         PaymentStatus = r.PaymentStatus,
                         CustomerID = r.CustomerID
                     })
@@ -39,10 +43,10 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                     BookingDate = b.BookingDate,
                     CheckInDate = b.CheckInDate,
                     CheckOutDate = b.CheckOutDate,
-                    RoomTypeID = b.RoomTypeID,
+                    RoomID = b.RoomID,
                     PaymentStatus = b.PaymentStatus,
                     CustomerID = b.CustomerID,
-                    TypeName = GetRoomTypeName(b.RoomTypeID ?? 0),
+                    TypeName = GetRoomTypeName(b.RoomID ?? 0),
                     FullName = GetCustomerFullName(b.CustomerID ?? 0)
                 });
 
@@ -54,15 +58,15 @@ namespace LuxuryHotel.Areas.Reception.Controllers
             }
         }
 
-        public string GetRoomTypeName(int? roomTypeID)
+        public string GetRoomTypeName(int? roomID)
         {
             try
             {
-                if (roomTypeID.HasValue)
+                if (roomID.HasValue)
                 {
-                    var roomType = _db.ROOMTYPEs
-                        .Where(r => r.RoomTypeID == roomTypeID.Value)
-                        .Select(r => r.TypeName)
+                    var roomType = _db.ROOMs
+                        .Where(r => r.RoomID == roomID.Value)
+                        .Select(r => r.RoomName)
                         .SingleOrDefault();
 
                     return roomType ?? "Unknown";
@@ -105,7 +109,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
 
 
         [HttpPost]
-        public JsonResult CreateBooking(int BookingID, DateTime BookingDate, DateTime CheckInDate, DateTime CheckOutDate, int RoomTypeID, string PaymentStatus, int CustomerID)
+        public JsonResult CreateBooking(int BookingID, DateTime BookingDate, DateTime CheckInDate, DateTime CheckOutDate, int RoomID, string PaymentStatus, int CustomerID)
         {
             try
             {
@@ -119,7 +123,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                         BookingDate = BookingDate,
                         CheckInDate = CheckInDate,
                         CheckOutDate = CheckOutDate,
-                        RoomTypeID = RoomTypeID,
+                        RoomID = RoomID,
                         PaymentStatus = PaymentStatus,
                         CustomerID = CustomerID
                     };
@@ -141,7 +145,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
 
 
         [HttpPost]
-        public JsonResult Edit(int BookingID, DateTime BookingDate, DateTime CheckInDate, DateTime CheckOutDate, int RoomTypeID, string PaymentStatus, int CustomerID)
+        public JsonResult Edit(int BookingID, DateTime BookingDate, DateTime CheckInDate, DateTime CheckOutDate, int RoomID, string PaymentStatus, int CustomerID)
         {
             try
             {
@@ -156,7 +160,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                         // Chuyển đổi giá trị từ chuỗi sang kiểu int
                         existingbooking.CheckInDate = CheckInDate;
                         existingbooking.CheckOutDate = CheckOutDate;
-                        existingbooking.RoomTypeID = RoomTypeID;
+                        existingbooking.RoomID = RoomID;
                         existingbooking.PaymentStatus = PaymentStatus;
                         existingbooking.CustomerID = CustomerID;
 
@@ -192,7 +196,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
                         BookingDate = r.BookingDate,
                         CheckInDate = r.CheckInDate,
                         CheckOutDate = r.CheckOutDate,
-                        RoomTypeID = r.RoomTypeID,
+                        RoomID = r.RoomID,
                         PaymentStatus = r.PaymentStatus,
                         CustomerID = r.CustomerID
                     })
@@ -235,6 +239,64 @@ namespace LuxuryHotel.Areas.Reception.Controllers
             {
                 return Json(new { code = 500, msg = "Đã xảy ra lỗi khi xóa Booking: " + ex.Message });
             }
+        }
+
+        [HttpPost]
+        public JsonResult CheckIn(int BookingID)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var booking = _db.BOOKINGs.SingleOrDefault(r => r.BookingID == BookingID);
+                    var existingRoom = _db.ROOMs.SingleOrDefault(r => r.RoomID == booking.RoomID);
+
+                    if (existingRoom != null&& existingRoom.RoomStatus== "Available")
+                    {
+                        existingRoom.RoomStatus = "Booked";
+                        _db.SubmitChanges();
+
+                        CHECKINROOM cHECKINROOM = new CHECKINROOM
+                        {
+                            BookingID = BookingID,
+                            CheckInDate = DateTime.Now,
+                            ReceptionID = IDRep(),
+                            RoomID = booking.RoomID,
+                        };
+                        _db.CHECKINROOMs.InsertOnSubmit(cHECKINROOM);
+                        _db.SubmitChanges();
+                        if (booking.PaymentStatus == "Paid")
+                        {
+                            booking.PaymentStatus = "Paid and Checkin";
+                            _db.SubmitChanges();
+                        }
+                        else
+                        {
+                            booking.PaymentStatus = "Paid and Checkin";
+                            _db.SubmitChanges();
+                        }
+                            return Json(new { code = 200, msg = "Nhận phòng thành công!" });
+                    }
+                    else
+                    {
+                        return Json(new { code = 400, msg = "Chọn phòng khác!" });
+                    }
+                }
+
+                return Json(new { code = 400, msg = "Dữ liệu không hợp lệ!" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { code = 500, msg = ex.Message });
+            }
+        }
+        public int IDRep()
+        {
+            string receptionUsername = User.Identity.Name;
+
+            // Tìm thông tin của người tiếp tân từ cơ sở dữ liệu
+            RECEPTION receptionist = _db.RECEPTIONs.SingleOrDefault(r => r.User == receptionUsername);
+            return receptionist.ReceptionID;
         }
     }
 }

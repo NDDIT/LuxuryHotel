@@ -132,6 +132,7 @@
     <Compile Include="Areas\Reception\Controllers\PriceFormationController.cs" />
     <Compile Include="Areas\Reception\Controllers\RoomController.cs" />
     <Compile Include="Areas\Reception\Controllers\ServiceController.cs" />
+    <Compile Include="Areas\Reception\Controllers\ServiceRequestController.cs" />
     <Compile Include="Areas\Reception\Controllers\StatisticController.cs" />
     <Compile Include="Areas\Reception\Controllers\UtilitiesController.cs" />
     <Compile Include="Areas\Reception\ReceptionAreaRegistration.cs" />
@@ -282,10 +283,10 @@
     <Content Include="Admin\Images\Gt_Thcb.jpg" />
     <Content Include="Admin\Images\hinh-anh-avatar-doi-cute-cho-nam.jpg" />
     <Content Include="Admin\Images\Hinh-anh.jpg" />
-    <Content Include="Admin\Images\icon-ul\bon-tam.jpg" />
-    <Content Include="Admin\Images\icon-ul\ghe-tinh-yeu.jpg" />
-    <Content Include="Admin\Images\icon-ul\truyen-hinh.jpg" />
-    <Content Include="Admin\Images\icon-ul\wifi.jpg" />
+    <Content Include="Admin\Images\Room\bon-tam.jpg" />
+    <Content Include="Admin\Images\Room\ghe-tinh-yeu.jpg" />
+    <Content Include="Admin\Images\Room\truyen-hinh.jpg" />
+    <Content Include="Admin\Images\Room\wifi.jpg" />
     <Content Include="Admin\Images\Kt.jpg" />
     <Content Include="Admin\Images\KT0001.jpg" />
     <Content Include="Admin\Images\KT0002.jpg" />
@@ -2135,6 +2136,7 @@
     <Content Include="Areas\Reception\Views\Customer\Index.cshtml" />
     <Content Include="Areas\Reception\Views\Booking\Index.cshtml" />
     <Content Include="Areas\Reception\Views\Utilities\Index.cshtml" />
+    <Content Include="Areas\Reception\Views\ServiceRequest\Index.cshtml" />
     <None Include="Models\db.dbml.layout">
       <DependentUpon>db.dbml</DependentUpon>
     </None>
@@ -2283,7 +2285,7 @@
     <Content Include="Views\Shared\FooterPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\Images\Room\" />
+    <Folder Include="Admin\Images\icon-ul\" />
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Reception\Data\" />
     <Folder Include="Views\LuxuryHotel\" />
