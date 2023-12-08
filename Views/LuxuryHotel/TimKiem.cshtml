@@ -1,0 +1,72 @@
+﻿
+
+
+@using LuxuryHotel.Models
+@{
+    ViewBag.Title = "TimKiem";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+
+<!--navbar-fixed-top-->
+<div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <!-- Collect the nav links, forms, and other content for toggling
+    (Chứa nội dung của navbar) -->
+    <div class="collapse navbar-collapse" id="navbar1">
+        <form class="navbar-form navbar-right" role="search" action="@Url.Action("SearchPhong", "LuxuryHotel")" method="GET">
+        </form>
+
+
+    </div>
+    <!-- /.navbar-collapse -->
+</div>
+
+
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Room ID</th>
+                <th>Room Name</th>
+                <th>Status</th>
+                <th>Type Name</th>
+                <th>Area</th>
+                <th>PricePerHour</th>
+                <th>PriceByDay</th>
+                <th>OverNightPrice</th>
+                <th>PriceFirstHour</th>
+                <th>PriceOverTime</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sp in Model)
+            {
+                <tr>
+                    <td>@sp.RoomID</td>
+                    <td>@sp.RoomName</td>
+                    <td>@sp.RoomStatus</td>
+                    <td>@sp.Area</td>
+                    <td>@sp.ROOMTYPE.PricePerHour</td>
+                    <td>@sp.ROOMTYPE.PriceByDay</td>
+                    <td>@sp.ROOMTYPE.OverNightPrice</td>
+                    <td>@sp.ROOMTYPE.PriceFirstHour</td>
+                    <td>@sp.ROOMTYPE.PriceOverTime</td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không tìm thấy kết quả phù hợp.</p>
+}
+
+
+
+

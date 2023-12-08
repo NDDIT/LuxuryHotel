@@ -130,3 +130,8 @@ C:\Users\DUY DƯƠNG\source\repos\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.CoreC
 C:\Users\DUY DƯƠNG\source\repos\LuxuryHotel\obj\Debug\LuxuryHotel.csproj.CopyComplete
 C:\Users\DUY DƯƠNG\source\repos\LuxuryHotel\obj\Debug\LuxuryHotel.dll
 C:\Users\DUY DƯƠNG\source\repos\LuxuryHotel\obj\Debug\LuxuryHotel.pdb
+C:\KhachSan\LuxuryHotel\bin\PagedList.dll
+C:\KhachSan\LuxuryHotel\bin\PagedList.Mvc.dll
+C:\KhachSan\LuxuryHotel\bin\System.Linq.Dynamic.dll
+C:\KhachSan\LuxuryHotel\bin\PagedList.xml
+C:\KhachSan\LuxuryHotel\bin\PagedList.Mvc.xml

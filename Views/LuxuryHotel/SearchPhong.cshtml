@@ -1,0 +1,121 @@
+﻿@using LuxuryHotel.Models
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <link rel="manifest" href="site.webmanifest"> -->
+<link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.png">
+
+<!-- Place favicon.ico in the root directory -->
+<!-- CSS here -->
+<link href="~/Content/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
+<link href="~/Content/css/magnific-popup.css" rel="stylesheet" />
+<link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/css/themify-icons.css" rel="stylesheet" />
+<link href="~/Content/css/nice-select.css" rel="stylesheet" />
+<link href="~/Content/css/flaticon.css" rel="stylesheet" />
+<link href="~/Content/css/gijgo.css" rel="stylesheet" />
+<link href="~/Content/css/animate.css" rel="stylesheet" />
+<link href="~/Content/css/slicknav.css" rel="stylesheet" />
+<link href="~/Content/css/style.css" rel="stylesheet" />
+
+<!-- <link rel="stylesheet" href="css/responsive.css"> -->
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg_1" style="background-image: url('../../images/banner/bradcam2.png');">
+    <h3>BEDROOMS OF LUXURY HOTEL</h3>
+</div>
+<!-- bradcam_area_end -->
+<!-- offers_area_start -->
+<div class="offers_area padding_top">
+    <div class="container">
+        @using (Html.BeginForm("SearchPhong", "LuxuryHotel", FormMethod.Get))
+        {
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="section_title text-center mb-100">
+                        <span>Our Offers</span>
+                        <h3>Ongoing Offers</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if (Model != null)
+                {
+                    foreach (var room in Model)
+                    {
+                        <div class="col-xl-4 col-md-4">
+                            <div class="single_offers">
+                                <div class="about_thumb">
+                                    <img src="~/sources/images/room-2.jpg" alt="" />
+                                </div>
+                                <h3>
+                                    @room.RoomName
+                                    <br>
+                                    @room.ROOMTYPE.TypeName
+                                </h3>
+                                <ul>
+                                    <li>@room.Area</li>
+                                    <li>Price Per Hour: @Html.FormatValue(room.ROOMTYPE.PricePerHour, "{0:#,##0}") USD</li>
+                                    <li>Price By Day: @Html.FormatValue(room.ROOMTYPE.PriceByDay, "{0:#,##0}") USD</li>
+                                    <li>Over Night Price: @Html.FormatValue(room.ROOMTYPE.OverNightPrice, "{0:#,##0}") USD</li>
+                                    <li>Price First Hour: @Html.FormatValue(room.ROOMTYPE.PriceFirstHour, "{0:#,##0}") USD</li>
+                                    <li>Over Time Price: @Html.FormatValue(room.ROOMTYPE.PriceOverTime, "{0:#,##0}") USD</li>
+
+                                </ul>
+                                <a href="@Url.Action("AddRoom","BookRoom", new { ms = room.RoomID, url = Request.Url.ToString() })" class="book_now">Book now</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+<!-- offers_area_end -->
+<!-- JS here -->
+<script src="~/Scripts/js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="~/Scripts/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/js/popper.min.js"></script>
+<script src="~/Scripts/js/bootstrap.min.js"></script>
+<script src="~/Scripts/js/owl.carousel.min.js"></script>
+<script src="~/Scripts/js/isotope.pkgd.min.js"></script>
+<script src="~/Scripts/js/ajax-form.js"></script>
+<script src="~/Scripts/js/waypoints.min.js"></script>
+<script src="~/Scripts/js/jquery.counterup.min.js"></script>
+<script src="~/Scripts/js/imagesloaded.pkgd.min.js"></script>
+<script src="~/Scripts/js/scrollIt.js"></script>
+<script src="~/Scripts/js/jquery.scrollUp.min.js"></script>
+<script src="~/Scripts/js/wow.min.js"></script>
+<script src="~/Scripts/js/nice-select.min.js"></script>
+<script src="~/Scripts/js/jquery.slicknav.min.js"></script>
+<script src="~/Scripts/js/jquery.magnific-popup.min.js"></script>
+<script src="~/Scripts/js/plugins.js"></script>
+<script src="~/Scripts/js/gijgo.min.js"></script>
+<!--contact js-->
+<script src="~/Scripts/js/contact.js"></script>
+<script src="~/Scripts/js/jquery.ajaxchimp.min.js"></script>
+<script src="~/Scripts/js/jquery.form.js"></script>
+<script src="~/Scripts/js/jquery.validate.min.js"></script>
+<script src="~/Scripts/js/mail-script.js"></script>
+<script src="~/Scripts/js/main.js"></script>
+<script>
+    $('#datepicker').datepicker({
+        iconsLibrary: 'fontawesome',
+        icons: {
+            rightIcon: '<span class="fa fa-caret-down"></span>'
+        }
+    });
+    $('#datepicker2').datepicker({
+        iconsLibrary: 'fontawesome',
+        icons: {
+            rightIcon: '<span class="fa fa-caret-down"></span>'
+        }
+
+    });
+</script>
+
+
