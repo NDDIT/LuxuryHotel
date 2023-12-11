@@ -1,0 +1,115 @@
+﻿@model LuxuryHotel.Models.ROOM
+@using System.Linq
+<link href="~/Content/Styles.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "ChiTietPhong";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<style>
+    #Che{
+        width: 100%;
+        height:100px;
+        background-color: dimgrey;
+    }
+    .thumbnail{
+        width: 50%; 
+        margin-left: 20px;
+        
+    }
+    .carousel-inner{
+        margin: 0 auto;
+    }
+    #chitietphong
+    {
+        display: flex;
+        position: relative;
+        width: 100%;
+        margin-top: 20px;
+       
+        
+    }
+    #Information {
+        position: absolute;
+        width: 45%;
+        right: 0;
+        display: block;
+        min-height: 400px;
+    }
+    #Information h1{
+        font-weight:700;
+    }
+    #btn-datphong{
+        position: absolute;
+        bottom: 10%;
+        right: 30%;
+    }
+</style>
+<div id="Che">
+
+</div>
+<div id="chitietphong">
+
+
+    <div class="thumbnail">
+
+        <div id="carousel2" class="carousel slide">
+            <ol class="carousel-indicators">
+                @{
+                    int i = 0; // Di chuyển khai báo ra khỏi vòng lặp
+                }
+                @foreach (var image in ViewBag.ImagesRoom)
+                {
+
+                    <li data-target="#carousel2" data-slide-to="@i" class="@((i == 0) ? "active" : "")"></li>
+                    i++;
+                }
+            </ol>
+            <div class="carousel-inner">
+                @if (ViewBag.ImagesRoom == null)
+                {
+                    <!-- Nếu danh sách rỗng hoặc không có, hiển thị ảnh mặc định -->
+                    <div class="item active">
+                        <img src="~/Admin/Images/User/about/about_1.png" alt="Thumbnail Image 1" class="img-responsive img-rounded imgbook" style="width:100%;">
+                    </div>
+
+                }
+                else
+                {
+
+                    int j = 0; // Di chuyển khai báo ra khỏi vòng lặp
+
+                    <!-- Nếu danh sách không rỗng, hiển thị dữ liệu thực tế -->
+                    foreach (var image in ViewBag.ImagesRoom)
+                    {
+
+                        <div class="item @(j == 0 ? "active" : "")">
+                            <img src="@Url.Content("~/Admin/Images/Room/" + image.ImagePath)" alt="Room Image" class="img-responsive img-rounded imgbook" style="width:100%; height:400px">
+                        </div>
+                        j++;
+                    }
+                }
+            </div>
+            <a class="left carousel-control" href="#carousel2" data-slide="prev"><span class="icon-prev"></span></a>
+            <a class="right carousel-control" href="#carousel2" data-slide="next"><span class="icon-next"></span></a>
+        </div>
+    </div>
+    <div id="Information">
+        <h1> @Model.RoomName </h1>
+        <h3> Loại Phòng: @ViewBag.TypeName</h3>
+        <span> Khu vực: @ViewBag.Area</span>
+        <div>
+            Tiện ích:
+            @foreach (var uti in ViewBag.Utulities)
+            {
+                <img src="/Admin/Images/Room/@uti.UtilitiesPicture" loading="lazy" style="width:20px; height:20px; margin:5px" />
+            }
+        </div>
+        <div id="btn-datphong">
+            <button type="button" class="btn btn-primary">ĐẶT PHÒNG</button>
+        </div>
+    </div>
+  
+
+</div>
+
+   

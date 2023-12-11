@@ -13,6 +13,7 @@ namespace LuxuryHotel.Areas.Reception.Controllers
         
         private dbDataContext db = new dbDataContext();
         // GET: Reception/Customer
+        
         public ActionResult Index()
         {
             return View();

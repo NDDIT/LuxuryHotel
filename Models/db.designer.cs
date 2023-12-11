@@ -39,18 +39,18 @@ namespace LuxuryHotel.Models
     partial void InsertCHECKOUTROOM(CHECKOUTROOM instance);
     partial void UpdateCHECKOUTROOM(CHECKOUTROOM instance);
     partial void DeleteCHECKOUTROOM(CHECKOUTROOM instance);
-    partial void InsertImage(Image instance);
-    partial void UpdateImage(Image instance);
-    partial void DeleteImage(Image instance);
     partial void InsertCUSTOMER(CUSTOMER instance);
     partial void UpdateCUSTOMER(CUSTOMER instance);
     partial void DeleteCUSTOMER(CUSTOMER instance);
-    partial void InsertPAYMENT(PAYMENT instance);
-    partial void UpdatePAYMENT(PAYMENT instance);
-    partial void DeletePAYMENT(PAYMENT instance);
     partial void InsertUtility(Utility instance);
     partial void UpdateUtility(Utility instance);
     partial void DeleteUtility(Utility instance);
+    partial void InsertImage(Image instance);
+    partial void UpdateImage(Image instance);
+    partial void DeleteImage(Image instance);
+    partial void InsertPAYMENT(PAYMENT instance);
+    partial void UpdatePAYMENT(PAYMENT instance);
+    partial void DeletePAYMENT(PAYMENT instance);
     partial void InsertRECEPTION(RECEPTION instance);
     partial void UpdateRECEPTION(RECEPTION instance);
     partial void DeleteRECEPTION(RECEPTION instance);
@@ -72,19 +72,20 @@ namespace LuxuryHotel.Models
     partial void InsertSERVICEREQUEST(SERVICEREQUEST instance);
     partial void UpdateSERVICEREQUEST(SERVICEREQUEST instance);
     partial void DeleteSERVICEREQUEST(SERVICEREQUEST instance);
-        #endregion
+    #endregion
+		
+		public dbDataContext(string connection) : 
+				base(connection, mappingSource)
+		{
+			OnCreated();
+		}
         public dbDataContext() :
         base(global::System.Configuration.ConfigurationManager.ConnectionStrings["LuxuryHotelConnectionString"].ConnectionString, mappingSource)
         {
             OnCreated();
         }
-        public dbDataContext(string connection) : 
-				base(connection, mappingSource)
-		{
-			OnCreated();
-		}
-		
-		public dbDataContext(System.Data.IDbConnection connection) : 
+
+        public dbDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
@@ -126,14 +127,6 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
-		public System.Data.Linq.Table<Image> Images
-		{
-			get
-			{
-				return this.GetTable<Image>();
-			}
-		}
-		
 		public System.Data.Linq.Table<CUSTOMER> CUSTOMERs
 		{
 			get
@@ -142,19 +135,27 @@ namespace LuxuryHotel.Models
 			}
 		}
 		
-		public System.Data.Linq.Table<PAYMENT> PAYMENTs
-		{
-			get
-			{
-				return this.GetTable<PAYMENT>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Utility> Utilities
 		{
 			get
 			{
 				return this.GetTable<Utility>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Image> Images
+		{
+			get
+			{
+				return this.GetTable<Image>();
+			}
+		}
+		
+		public System.Data.Linq.Table<PAYMENT> PAYMENTs
+		{
+			get
+			{
+				return this.GetTable<PAYMENT>();
 			}
 		}
 		
@@ -1030,181 +1031,6 @@ namespace LuxuryHotel.Models
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Images")]
-	public partial class Image : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ImageID;
-		
-		private int _RoomID;
-		
-		private string _ImagePath;
-		
-		private System.Nullable<int> _OderID;
-		
-		private EntityRef<ROOM> _ROOM;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnImageIDChanging(int value);
-    partial void OnImageIDChanged();
-    partial void OnRoomIDChanging(int value);
-    partial void OnRoomIDChanged();
-    partial void OnImagePathChanging(string value);
-    partial void OnImagePathChanged();
-    partial void OnOderIDChanging(System.Nullable<int> value);
-    partial void OnOderIDChanged();
-    #endregion
-		
-		public Image()
-		{
-			this._ROOM = default(EntityRef<ROOM>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ImageID
-		{
-			get
-			{
-				return this._ImageID;
-			}
-			set
-			{
-				if ((this._ImageID != value))
-				{
-					this.OnImageIDChanging(value);
-					this.SendPropertyChanging();
-					this._ImageID = value;
-					this.SendPropertyChanged("ImageID");
-					this.OnImageIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL")]
-		public int RoomID
-		{
-			get
-			{
-				return this._RoomID;
-			}
-			set
-			{
-				if ((this._RoomID != value))
-				{
-					if (this._ROOM.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnRoomIDChanging(value);
-					this.SendPropertyChanging();
-					this._RoomID = value;
-					this.SendPropertyChanged("RoomID");
-					this.OnRoomIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImagePath", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string ImagePath
-		{
-			get
-			{
-				return this._ImagePath;
-			}
-			set
-			{
-				if ((this._ImagePath != value))
-				{
-					this.OnImagePathChanging(value);
-					this.SendPropertyChanging();
-					this._ImagePath = value;
-					this.SendPropertyChanged("ImagePath");
-					this.OnImagePathChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OderID", DbType="Int")]
-		public System.Nullable<int> OderID
-		{
-			get
-			{
-				return this._OderID;
-			}
-			set
-			{
-				if ((this._OderID != value))
-				{
-					this.OnOderIDChanging(value);
-					this.SendPropertyChanging();
-					this._OderID = value;
-					this.SendPropertyChanged("OderID");
-					this.OnOderIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_ROOM", ThisKey="RoomID", OtherKey="RoomID", IsForeignKey=true)]
-		public ROOM ROOM
-		{
-			get
-			{
-				return this._ROOM.Entity;
-			}
-			set
-			{
-				ROOM previousValue = this._ROOM.Entity;
-				if (((previousValue != value) 
-							|| (this._ROOM.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ROOM.Entity = null;
-						previousValue.Images.Remove(this);
-					}
-					this._ROOM.Entity = value;
-					if ((value != null))
-					{
-						value.Images.Add(this);
-						this._RoomID = value.RoomID;
-					}
-					else
-					{
-						this._RoomID = default(int);
-					}
-					this.SendPropertyChanged("ROOM");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.CUSTOMER")]
 	public partial class CUSTOMER : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1443,6 +1269,319 @@ namespace LuxuryHotel.Models
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Utilities")]
+	public partial class Utility : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _UtilitiesID;
+		
+		private string _UtilitiesName;
+		
+		private string _UtilitiesPicture;
+		
+		private EntitySet<RoomUtility> _RoomUtilities;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUtilitiesIDChanging(int value);
+    partial void OnUtilitiesIDChanged();
+    partial void OnUtilitiesNameChanging(string value);
+    partial void OnUtilitiesNameChanged();
+    partial void OnUtilitiesPictureChanging(string value);
+    partial void OnUtilitiesPictureChanged();
+    #endregion
+		
+		public Utility()
+		{
+			this._RoomUtilities = new EntitySet<RoomUtility>(new Action<RoomUtility>(this.attach_RoomUtilities), new Action<RoomUtility>(this.detach_RoomUtilities));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int UtilitiesID
+		{
+			get
+			{
+				return this._UtilitiesID;
+			}
+			set
+			{
+				if ((this._UtilitiesID != value))
+				{
+					this.OnUtilitiesIDChanging(value);
+					this.SendPropertyChanging();
+					this._UtilitiesID = value;
+					this.SendPropertyChanged("UtilitiesID");
+					this.OnUtilitiesIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesName", DbType="NVarChar(255)")]
+		public string UtilitiesName
+		{
+			get
+			{
+				return this._UtilitiesName;
+			}
+			set
+			{
+				if ((this._UtilitiesName != value))
+				{
+					this.OnUtilitiesNameChanging(value);
+					this.SendPropertyChanging();
+					this._UtilitiesName = value;
+					this.SendPropertyChanged("UtilitiesName");
+					this.OnUtilitiesNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesPicture", DbType="NVarChar(MAX)")]
+		public string UtilitiesPicture
+		{
+			get
+			{
+				return this._UtilitiesPicture;
+			}
+			set
+			{
+				if ((this._UtilitiesPicture != value))
+				{
+					this.OnUtilitiesPictureChanging(value);
+					this.SendPropertyChanging();
+					this._UtilitiesPicture = value;
+					this.SendPropertyChanged("UtilitiesPicture");
+					this.OnUtilitiesPictureChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Utility_RoomUtility", Storage="_RoomUtilities", ThisKey="UtilitiesID", OtherKey="UtilitiesID")]
+		public EntitySet<RoomUtility> RoomUtilities
+		{
+			get
+			{
+				return this._RoomUtilities;
+			}
+			set
+			{
+				this._RoomUtilities.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_RoomUtilities(RoomUtility entity)
+		{
+			this.SendPropertyChanging();
+			entity.Utility = this;
+		}
+		
+		private void detach_RoomUtilities(RoomUtility entity)
+		{
+			this.SendPropertyChanging();
+			entity.Utility = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Images")]
+	public partial class Image : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ImageID;
+		
+		private int _RoomID;
+		
+		private string _ImagePath;
+		
+		private System.Nullable<int> _OderID;
+		
+		private EntityRef<ROOM> _ROOM;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnImageIDChanging(int value);
+    partial void OnImageIDChanged();
+    partial void OnRoomIDChanging(int value);
+    partial void OnRoomIDChanged();
+    partial void OnImagePathChanging(string value);
+    partial void OnImagePathChanged();
+    partial void OnOderIDChanging(System.Nullable<int> value);
+    partial void OnOderIDChanged();
+    #endregion
+		
+		public Image()
+		{
+			this._ROOM = default(EntityRef<ROOM>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ImageID
+		{
+			get
+			{
+				return this._ImageID;
+			}
+			set
+			{
+				if ((this._ImageID != value))
+				{
+					this.OnImageIDChanging(value);
+					this.SendPropertyChanging();
+					this._ImageID = value;
+					this.SendPropertyChanged("ImageID");
+					this.OnImageIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoomID", DbType="Int NOT NULL")]
+		public int RoomID
+		{
+			get
+			{
+				return this._RoomID;
+			}
+			set
+			{
+				if ((this._RoomID != value))
+				{
+					if (this._ROOM.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnRoomIDChanging(value);
+					this.SendPropertyChanging();
+					this._RoomID = value;
+					this.SendPropertyChanged("RoomID");
+					this.OnRoomIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImagePath", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+		public string ImagePath
+		{
+			get
+			{
+				return this._ImagePath;
+			}
+			set
+			{
+				if ((this._ImagePath != value))
+				{
+					this.OnImagePathChanging(value);
+					this.SendPropertyChanging();
+					this._ImagePath = value;
+					this.SendPropertyChanged("ImagePath");
+					this.OnImagePathChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OderID", DbType="Int")]
+		public System.Nullable<int> OderID
+		{
+			get
+			{
+				return this._OderID;
+			}
+			set
+			{
+				if ((this._OderID != value))
+				{
+					this.OnOderIDChanging(value);
+					this.SendPropertyChanging();
+					this._OderID = value;
+					this.SendPropertyChanged("OderID");
+					this.OnOderIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ROOM_Image", Storage="_ROOM", ThisKey="RoomID", OtherKey="RoomID", IsForeignKey=true)]
+		public ROOM ROOM
+		{
+			get
+			{
+				return this._ROOM.Entity;
+			}
+			set
+			{
+				ROOM previousValue = this._ROOM.Entity;
+				if (((previousValue != value) 
+							|| (this._ROOM.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ROOM.Entity = null;
+						previousValue.Images.Remove(this);
+					}
+					this._ROOM.Entity = value;
+					if ((value != null))
+					{
+						value.Images.Add(this);
+						this._RoomID = value.RoomID;
+					}
+					else
+					{
+						this._RoomID = default(int);
+					}
+					this.SendPropertyChanged("ROOM");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PAYMENT")]
 	public partial class PAYMENT : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -1615,144 +1754,6 @@ namespace LuxuryHotel.Models
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Utilities")]
-	public partial class Utility : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _UtilitiesID;
-		
-		private string _UtilitiesName;
-		
-		private string _UtilitiesPicture;
-		
-		private EntitySet<RoomUtility> _RoomUtilities;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUtilitiesIDChanging(int value);
-    partial void OnUtilitiesIDChanged();
-    partial void OnUtilitiesNameChanging(string value);
-    partial void OnUtilitiesNameChanged();
-    partial void OnUtilitiesPictureChanging(string value);
-    partial void OnUtilitiesPictureChanged();
-    #endregion
-		
-		public Utility()
-		{
-			this._RoomUtilities = new EntitySet<RoomUtility>(new Action<RoomUtility>(this.attach_RoomUtilities), new Action<RoomUtility>(this.detach_RoomUtilities));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int UtilitiesID
-		{
-			get
-			{
-				return this._UtilitiesID;
-			}
-			set
-			{
-				if ((this._UtilitiesID != value))
-				{
-					this.OnUtilitiesIDChanging(value);
-					this.SendPropertyChanging();
-					this._UtilitiesID = value;
-					this.SendPropertyChanged("UtilitiesID");
-					this.OnUtilitiesIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesName", DbType="NVarChar(255)")]
-		public string UtilitiesName
-		{
-			get
-			{
-				return this._UtilitiesName;
-			}
-			set
-			{
-				if ((this._UtilitiesName != value))
-				{
-					this.OnUtilitiesNameChanging(value);
-					this.SendPropertyChanging();
-					this._UtilitiesName = value;
-					this.SendPropertyChanged("UtilitiesName");
-					this.OnUtilitiesNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UtilitiesPicture", DbType="NVarChar(MAX)")]
-		public string UtilitiesPicture
-		{
-			get
-			{
-				return this._UtilitiesPicture;
-			}
-			set
-			{
-				if ((this._UtilitiesPicture != value))
-				{
-					this.OnUtilitiesPictureChanging(value);
-					this.SendPropertyChanging();
-					this._UtilitiesPicture = value;
-					this.SendPropertyChanged("UtilitiesPicture");
-					this.OnUtilitiesPictureChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Utility_RoomUtility", Storage="_RoomUtilities", ThisKey="UtilitiesID", OtherKey="UtilitiesID")]
-		public EntitySet<RoomUtility> RoomUtilities
-		{
-			get
-			{
-				return this._RoomUtilities;
-			}
-			set
-			{
-				this._RoomUtilities.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_RoomUtilities(RoomUtility entity)
-		{
-			this.SendPropertyChanging();
-			entity.Utility = this;
-		}
-		
-		private void detach_RoomUtilities(RoomUtility entity)
-		{
-			this.SendPropertyChanging();
-			entity.Utility = null;
 		}
 	}
 	

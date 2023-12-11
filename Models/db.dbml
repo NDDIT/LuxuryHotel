@@ -36,15 +36,6 @@
       <Association Name="CHECKINROOM_CHECKOUTROOM" Member="CHECKINROOM" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKINROOM" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Images" Member="Images">
-    <Type Name="Image">
-      <Column Name="ImageID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ImagePath" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="OderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="ROOM_Image" Member="ROOM" ThisKey="RoomID" OtherKey="RoomID" Type="ROOM" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.CUSTOMER" Member="CUSTOMERs">
     <Type Name="CUSTOMER">
       <Column Name="CustomerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -57,6 +48,23 @@
       <Association Name="CUSTOMER_REVIEW" Member="REVIEWs" ThisKey="CustomerID" OtherKey="CustomerID" Type="REVIEW" />
     </Type>
   </Table>
+  <Table Name="dbo.Utilities" Member="Utilities">
+    <Type Name="Utility">
+      <Column Name="UtilitiesID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="UtilitiesName" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="UtilitiesPicture" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Utility_RoomUtility" Member="RoomUtilities" ThisKey="UtilitiesID" OtherKey="UtilitiesID" Type="RoomUtility" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Images" Member="Images">
+    <Type Name="Image">
+      <Column Name="ImageID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RoomID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ImagePath" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="OderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="ROOM_Image" Member="ROOM" ThisKey="RoomID" OtherKey="RoomID" Type="ROOM" IsForeignKey="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.PAYMENT" Member="PAYMENTs">
     <Type Name="PAYMENT">
       <Column Name="Payid" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -64,14 +72,6 @@
       <Column Name="PaymentStatus" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Column Name="PaymentMethods" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="CHECKINROOM_PAYMENT" Member="CHECKINROOM" ThisKey="CheckinID" OtherKey="CheckinID" Type="CHECKINROOM" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Utilities" Member="Utilities">
-    <Type Name="Utility">
-      <Column Name="UtilitiesID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="UtilitiesName" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
-      <Column Name="UtilitiesPicture" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Association Name="Utility_RoomUtility" Member="RoomUtilities" ThisKey="UtilitiesID" OtherKey="UtilitiesID" Type="RoomUtility" />
     </Type>
   </Table>
   <Table Name="dbo.RECEPTIONS" Member="RECEPTIONs">

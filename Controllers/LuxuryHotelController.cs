@@ -17,15 +17,18 @@ namespace LuxuryHotel.Controllers
 {
     public class LuxuryHotelController : Controller
     {
-        dbDataContext db = new dbDataContext();
+         dbDataContext db = new dbDataContext();
         // GET: LuxuryHotel
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
 
-            var areas = from kv in db.ROOMs select kv;
-
-            return View(areas);
+            var listPhong = LayPhong();
+            int pageNum = (page ?? 1);
+            int pageSize = 6;
+           
+            return View(listPhong.ToPagedList(pageNum, pageSize));     
         }
+
         public ActionResult SearchPhong(int? size, int? page, string sortProperty, string sortOrder, string strSearch, int typeRoomID = 0)
         {
             List<SelectListItem> items = new List<SelectListItem>
@@ -118,22 +121,50 @@ namespace LuxuryHotel.Controllers
             return View(kq.ToList());
         }
 
-        public ActionResult ChiTietPhong(int iRoomID)
+        private  Utility LayTienIch(int UtilitiesID)
         {
-            var room = db.ROOMs.FirstOrDefault(s => s.RoomID == iRoomID);
-
-            if (room != null)
-            {
-                return View(room);
-            }
-            else
-            {
-                return HttpNotFound("Phòng không tồn tại.");
-            }
+            return db.Utilities.Where(a => a.UtilitiesID== UtilitiesID).SingleOrDefault(); ;
         }
-        private List<Image> LayPhongMoi(int count)
+      
+        private List<LuxuryHotel.Models.ROOM> LayPhong()
         {
-            return db.Imagees.OrderByDescending(a => a.ImageID).Take(count).ToList();
+            return db.ROOMs.OrderByDescending(a => a.RoomID).ToList();
+        }
+        public ActionResult ChiTietPhong(int id)
+        {
+            var ListImage = from b in db.Images where b.RoomID == id select b;
+            ViewBag.ImagesRoom = ListImage.ToList(); // Convert to List
+            var area = (from c in db.ROOMs where c.RoomID == id select c).SingleOrDefault(); ;
+            ViewBag.Area = area.Area; // Convert to List
+            var utilities = from d in db.RoomUtilities where d.RoomID == id select d;
+            List<LuxuryHotel.Models.Utility> lst = new List<LuxuryHotel.Models.Utility>();
+            foreach (var x in utilities)
+            {
+                var uti = LayTienIch(x.UtilitiesID);
+                lst.Add(uti);
+            }
+            ViewBag.Utulities = lst.ToList(); 
+            var room = (from s in db.ROOMs where s.RoomID == id select s).SingleOrDefault();
+            var roomtype = (from e in db.ROOMTYPEs where e.RoomTypeID == room.RoomTypeID select e).SingleOrDefault();
+            ViewBag.TypeName = roomtype.TypeName;
+            return View(room);
+        }
+        
+        public ActionResult SliderPartial()
+        {
+            return PartialView();
+        }
+        public ActionResult Sliderroom(int id)
+        {
+            var list = db.Images
+                   .Where(r => r.RoomID == id)
+                   .ToList();
+            return PartialView(list);
+        }
+        public ActionResult LoginLogout()
+        {
+
+            return PartialView();
         }
 
     }
