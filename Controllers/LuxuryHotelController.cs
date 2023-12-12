@@ -25,7 +25,7 @@ namespace LuxuryHotel.Controllers
             var listPhong = LayPhong();
             int pageNum = (page ?? 1);
             int pageSize = 6;
-           
+            ViewBag.RoomType = db.ROOMTYPEs.ToList();
             return View(listPhong.ToPagedList(pageNum, pageSize));     
         }
 

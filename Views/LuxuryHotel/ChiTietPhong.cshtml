@@ -6,28 +6,28 @@
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 <style>
-    #Che{
+    #Che {
         width: 100%;
-        height:100px;
+        height: 100px;
         background-color: dimgrey;
     }
-    .thumbnail{
-        width: 50%; 
+
+    .thumbnail {
+        width: 50%;
         margin-left: 20px;
-        
     }
-    .carousel-inner{
+
+    .carousel-inner {
         margin: 0 auto;
     }
-    #chitietphong
-    {
+
+    #chitietphong {
         display: flex;
         position: relative;
         width: 100%;
         margin-top: 20px;
-       
-        
     }
+
     #Information {
         position: absolute;
         width: 45%;
@@ -35,14 +35,17 @@
         display: block;
         min-height: 400px;
     }
-    #Information h1{
-        font-weight:700;
-    }
-    #btn-datphong{
+
+        #Information h1 {
+            font-weight: 700;
+        }
+
+    #btn-datphong {
         position: absolute;
         bottom: 10%;
         right: 30%;
     }
+
     .searchborder {
         border: 1px solid black;
         border-radius: 5px;
@@ -53,9 +56,14 @@
     #search-btn {
         border-radius: 10%;
     }
-    #span-cost{
-        color:red;
-        font-weight:700;
+
+    #span-cost {
+        color: red;
+        font-weight: 700;
+    }
+    #map{
+        width:100%;
+
     }
 </style>
 <div id="Che">
@@ -67,7 +75,7 @@
         <div class="col-lg-12">
             <form id="search-form" name="gs" method="post" role="search" action="#">
                 <div class="row">
-                   
+
                     <div class="col-lg-6 align-self-center">
                         <fieldset>
                             <input id="checkindate" type="datetime-local" name="checkindate" class="searchText" autocomplete="on" required>
@@ -80,7 +88,7 @@
 
                         </fieldset>
                     </div>
-                   
+
                 </div>
             </form>
 
@@ -105,7 +113,7 @@
                 }
             </ol>
             <div class="carousel-inner">
-                @if (ViewBag.ImagesRoom.Count==0)
+                @if (ViewBag.ImagesRoom.Count == 0)
                 {
                     <div class="item active">
                         <iframe src="https://www.facebook.com/plugins/video.php?height=280&href=https%3A%2F%2Fwww.facebook.com%2Fhinhanh360%2Fvideos%2F1804077803190325%2F&show_text=false&width=560&t=0" width="100%" height="400px" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
@@ -163,15 +171,37 @@
             <div id="span-cost">
                 Giá:
                 <span id="cost"> </span> VND
-                <input type="hidden" id="txtcost"/>
+                <input type="hidden" id="txtcost" />
             </div>
             <button type="button" class="btn btn-primary" id="btn-booking">ĐẶT PHÒNG</button>
 
         </div>
     </div>
-  
+
 
 </div>
+
+@{
+    var area = ViewBag.Area;
+}
+
+<div id="map">
+    @if (area.ToString() == "Bến Tre")
+    {
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d307.0060440926522!2d106.27070057552815!3d10.18191685622416!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310aa85c0cbca79f%3A0xaa3c54e567317543!2zQuG6v24gVHJlLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1702370604995!5m2!1svi!2s" style="border:0; width: 100%;height: 450px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    }
+    else if (area.ToString() == "Bình Dương")
+    {
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d420.9850517801999!2d106.55313642957071!3d10.789375007427918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529292e8d3dd1%3A0xf15f5aad773c112b!2zSOG7kyBDaMOtIE1pbmgsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1702370234200!5m2!1svi!2s" style="border:0; width: 100%;height: 450px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    }
+    else
+    {
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d420.9850517801999!2d106.55313642957071!3d10.789375007427918!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317529292e8d3dd1%3A0xf15f5aad773c112b!2zSOG7kyBDaMOtIE1pbmgsIFRow6BuaCBwaOG7kSBI4buTIENow60gTWluaCwgVmnhu4d0IE5hbQ!5e0!3m2!1svi!2s!4v1702370234200!5m2!1svi!2s" style="border:0; width: 100%;height: 450px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    }
+</div>
+
+
+
 
 
 
@@ -251,4 +281,4 @@
 });
 
 </script>
-   
+
