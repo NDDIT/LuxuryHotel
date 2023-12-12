@@ -43,9 +43,49 @@
         bottom: 10%;
         right: 30%;
     }
+    .searchborder {
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-top: 20px;
+        padding-top: 10px;
+    }
+
+    #search-btn {
+        border-radius: 10%;
+    }
+    #span-cost{
+        color:red;
+        font-weight:700;
+    }
 </style>
 <div id="Che">
 
+</div>
+
+<div class="container searchborder">
+    <div class="row">
+        <div class="col-lg-12">
+            <form id="search-form" name="gs" method="post" role="search" action="#">
+                <div class="row">
+                   
+                    <div class="col-lg-6 align-self-center">
+                        <fieldset>
+                            <input id="checkindate" type="datetime-local" name="checkindate" class="searchText" autocomplete="on" required>
+
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-6 align-self-center">
+                        <fieldset>
+                            <input id="checkoutdate" type="datetime-local" name="checkoutdate" class="searchText" autocomplete="on" required>
+
+                        </fieldset>
+                    </div>
+                   
+                </div>
+            </form>
+
+        </div>
+    </div>
 </div>
 <div id="chitietphong">
 
@@ -65,11 +105,11 @@
                 }
             </ol>
             <div class="carousel-inner">
-                @if (ViewBag.ImagesRoom == null)
+                @if (ViewBag.ImagesRoom.Count==0)
                 {
-                    <!-- Nếu danh sách rỗng hoặc không có, hiển thị ảnh mặc định -->
                     <div class="item active">
-                        <img src="~/Admin/Images/User/about/about_1.png" alt="Thumbnail Image 1" class="img-responsive img-rounded imgbook" style="width:100%;">
+                        <img src="~/Admin/Images/User/about/about_3.jpg" alt="Thumbnail Image 1" class="img-responsive img-rounded imgbook" style="width:100%; height:400px">
+
                     </div>
 
                 }
@@ -104,12 +144,92 @@
                 <img src="/Admin/Images/Room/@uti.UtilitiesPicture" loading="lazy" style="width:20px; height:20px; margin:5px" />
             }
         </div>
-        <div id="btn-datphong">
+        <div>
+            Giờ đầu:
+            <span id="costfirsthour" value="@ViewBag.PriceFirstHour">@ViewBag.PriceFirstHour VND</span>
+        </div>
+        <div>
+            Giờ sau:
+            <span id="costperhour" value="@ViewBag.PricePerHour">@ViewBag.PricePerHour VND</span>
+        </div>
+        <div>
+            Qua đêm:
+            <span id="costovernight" value="@ViewBag.OverNightPrice">@ViewBag.PricePerHour VND</span>
+        </div>
+        <div>
+            Theo Ngày:
+            <span id="costperday" value="@ViewBag.PricePerDay">@ViewBag.PricePerHour VND</span>
+        </div>
+        <div class="book_btn d-none d-lg-block" id="btn-datphong">
+            <div id="span-cost">
+                Giá:
+                <span id="cost"> </span> VND
+            </div>
             <button type="button" class="btn btn-primary">ĐẶT PHÒNG</button>
+
         </div>
     </div>
   
 
 </div>
 
+
+
+
+<script>
+    $(document).ready(function () {
+        var currentTime = new Date();
+        currentTime.setHours(currentTime.getHours() + 1);
+        var formattedTimeIN = currentTime.toISOString().slice(0, 16);
+        $('#checkindate').val(formattedTimeIN);
+        currentTime.setHours(currentTime.getHours() + 1);
+        var formattedTimeOUT = currentTime.toISOString().slice(0, 16);
+        $('#checkoutdate').val(formattedTimeOUT);
+
+        var indate = $('#checkindate').val();
+        var outdate = $('#checkoutdate').val();
+        Loadcost(indate, outdate);
+        $('#checkindate, #checkoutdate').change(function () {
+            var indate = $('#checkindate').val();
+            var outdate = $('#checkoutdate').val();
+            Loadcost(indate, outdate);
+        });
+    });
+
+    function Loadcost(indate, outdate) {
+        var hourscheck = new Date(indate).getHours();
+        var timeDifference = new Date(outdate) - new Date(indate);
+        var totalMinutes = Math.floor(timeDifference / 60000);
+        var PricePerDay = parseInt('@ViewBag.PricePerDay', 10);
+        var PricePerHour = parseInt('@ViewBag.PricePerHour', 10);
+        var OverNightPrice = parseInt('@ViewBag.OverNightPrice', 10);
+        var PriceFirstHour = parseInt('@ViewBag.PriceFirstHour', 10);
+
+
+        var totalPrice = 0;
+
+        if (totalMinutes > 600) {
+            totalPrice = ((totalMinutes / 1440) + 1) * PricePerDay;
+        } else if (hourscheck >= 22) {
+            totalPrice = OverNightPrice;
+        } else {
+            totalPrice += PriceFirstHour;
+            
+            if (totalMinutes > 60) {
+                var additionalHours = Math.floor((totalMinutes - 60) / 60);
+                var additionalMinutes = (totalMinutes - 60) % 60;
+
+                totalPrice += additionalHours * PricePerHour;
+                if (additionalMinutes > 0) {
+                    totalPrice += (PricePerHour / 60) * additionalMinutes;
+                }
+            }
+        }
+        console.log(PricePerHour);
+        console.log(PricePerDay);
+        console.log(timeDifference);
+        console.log(totalPrice);
+        $('#cost').text(parseInt(totalPrice));
+    }
+</script>
    

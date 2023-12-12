@@ -147,6 +147,11 @@ namespace LuxuryHotel.Controllers
             var room = (from s in db.ROOMs where s.RoomID == id select s).SingleOrDefault();
             var roomtype = (from e in db.ROOMTYPEs where e.RoomTypeID == room.RoomTypeID select e).SingleOrDefault();
             ViewBag.TypeName = roomtype.TypeName;
+            ViewBag.PricePerDay = roomtype.PriceByDay;
+            ViewBag.PriceFirstHour = roomtype.PriceFirstHour;
+            ViewBag.PricePerHour = roomtype.PricePerHour;
+            ViewBag.OverNightPrice = roomtype.OverNightPrice;
+      
             return View(room);
         }
         
