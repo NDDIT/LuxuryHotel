@@ -154,12 +154,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BookRoom.cs" />
     <Compile Include="Models\db.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>db.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Momo\MomoSercurity.cs" />
+    <Compile Include="Momo\PaymentRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -2432,12 +2434,12 @@
     <Content Include="Views\User\DangKy.cshtml" />
     <Content Include="Views\User\DangNhap.cshtml" />
     <Content Include="Views\LuxuryHotel\LoginLogout.cshtml" />
+    <Content Include="Views\BookingRoom\BookForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Admin\Images\icon-ul\" />
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Reception\Data\" />
-    <Folder Include="Views\BookingRoom\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -12,10 +12,7 @@ namespace LuxuryHotel.Controllers
 
         dbDataContext db = new dbDataContext();
         // GET: User
-        public ActionResult Index()
-        {
-            return View();
-        }
+       
         [HttpGet]
         public ActionResult DangXuat()
         {

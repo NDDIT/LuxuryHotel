@@ -1,6 +1,6 @@
 ﻿@model LuxuryHotel.Models.ROOM
 @using System.Linq
-<link href="~/Content/Styles.css" rel="stylesheet" />
+<link href="~/Content/Content/Styles.css" rel="stylesheet" />
 @{
     ViewBag.Title = "ChiTietPhong";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
@@ -164,8 +164,9 @@
             <div id="span-cost">
                 Giá:
                 <span id="cost"> </span> VND
+                <input type="hidden" id="txtcost"/>
             </div>
-            <button type="button" class="btn btn-primary">ĐẶT PHÒNG</button>
+            <button type="button" class="btn btn-primary" id="btn-booking">ĐẶT PHÒNG</button>
 
         </div>
     </div>
@@ -214,7 +215,7 @@
             totalPrice = OverNightPrice;
         } else {
             totalPrice += PriceFirstHour;
-            
+
             if (totalMinutes > 60) {
                 var additionalHours = Math.floor((totalMinutes - 60) / 60);
                 var additionalMinutes = (totalMinutes - 60) % 60;
@@ -230,6 +231,25 @@
         console.log(timeDifference);
         console.log(totalPrice);
         $('#cost').text(parseInt(totalPrice));
+        $('#txtcost').val(parseInt(totalPrice));
+
     }
+   $('#btn-booking').click(function () {
+    var indate = $('#checkindate').val();
+    var outdate = $('#checkoutdate').val();
+    var cost = $('#txtcost').val();
+    var RoomID = parseInt('@Model.RoomID');
+
+    // Generate the URL for the BookForm action with parameters
+    var url = '@Url.Action("BookForm", "BookingRoom")' +
+              '?RoomID=' + RoomID +
+              '&checkindate=' + encodeURIComponent(indate) +
+              '&checkoutdate=' + encodeURIComponent(outdate) +
+              '&cost=' + cost;
+
+    // Redirect to the generated URL
+    window.location.href = url;
+});
+
 </script>
    
