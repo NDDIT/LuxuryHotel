@@ -2435,6 +2435,7 @@
     <Content Include="Views\User\DangNhap.cshtml" />
     <Content Include="Views\LuxuryHotel\LoginLogout.cshtml" />
     <Content Include="Views\BookingRoom\BookForm.cshtml" />
+    <Content Include="Views\LuxuryHotel\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Admin\Images\icon-ul\" />

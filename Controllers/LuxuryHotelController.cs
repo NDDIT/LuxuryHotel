@@ -171,6 +171,23 @@ namespace LuxuryHotel.Controllers
 
             return PartialView();
         }
+        public ActionResult Search(string strSearch)
+        {
+            Console.WriteLine("Đang vào action Search"); // Hiển thị thông điệp trong Output
+
+            ViewBag.Search = strSearch;
+
+            if (string.IsNullOrEmpty(strSearch))
+            {
+                Console.WriteLine("Chuỗi tìm kiếm rỗng");
+                return View();
+            }
+
+            var kq = db.ROOMs.Where(s => s.Area.Contains(strSearch));
+            Console.WriteLine(kq);
+            ViewBag.Kq = kq.Count();
+            return View(kq);
+        }
 
     }
 }

@@ -10,14 +10,17 @@ using System.Globalization;
 using System.Net.Mail;
 using System.Net;
 using System.Configuration;
-
+using System.Web.UI;
+using IBook.Content.module;
+using PagedList;
+using PagedList.Mvc;
 namespace LuxuryHotel.Controllers
 {
     public class BookingRoomController : Controller
     {
         // GET: BookingRoom
         dbDataContext db = new dbDataContext();
-        public int tongTien = 0;
+       
         public ActionResult  BookForm(int RoomID , DateTime checkindate , DateTime checkoutdate , int cost)
         {
             var ListImage = from b in db.Images where b.RoomID == RoomID select b;
@@ -32,7 +35,7 @@ namespace LuxuryHotel.Controllers
                 lst.Add(uti);
             }
             ViewBag.Utulities = lst.ToList();
-            tongTien = cost;
+           
             var room = (from s in db.ROOMs where s.RoomID == RoomID select s).SingleOrDefault();
             var roomtype = (from e in db.ROOMTYPEs where e.RoomTypeID == room.RoomTypeID select e).SingleOrDefault();
             ViewBag.TypeName = roomtype.TypeName;
@@ -117,9 +120,9 @@ namespace LuxuryHotel.Controllers
             // Chuyển hướng đến trang xác nhận đơn hàng
             return RedirectToAction("Index", "LuxuryHotel");
         }
-        public ActionResult Payment()
+        public ActionResult Payment(double cost)
         {
-          
+            
             //request params need to request to MoMo system
             string endpoint = "https://test-payment.momo.vn/gw_payment/transactionProcessor";
             string partnerCode = "MOMOCJKB20220928";
@@ -129,7 +132,7 @@ namespace LuxuryHotel.Controllers
             string returnUrl = "http://tdmusachonline.somee.com/GioHang/XacNhanDonHang";
             string notifyurl = "http://tdmusachonline.somee.com/GioHang/DatHang"; //lưu ý: notifyurl không được sử dụng localhost, có thể sử dụng ngrok để public localhost trong quá trình test
 
-            string amount = tongTien.ToString();
+            string amount = cost.ToString();
             string orderid = DateTime.Now.Ticks.ToString(); //mã đơn hàng
             string requestId = DateTime.Now.Ticks.ToString();
             string extraData = "";
@@ -184,6 +187,34 @@ namespace LuxuryHotel.Controllers
             string rOrderId = result.orderId;
             string rErrorCode = result.errorCode; // = 0: thanh toán thành công
             return View();
+        }
+
+        [HttpPost]
+        public void SavePayment()
+        {
+            ////cập nhật dữ liệu vào db
+            //DONDATHANG ddh = new DONDATHANG();
+            //KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
+            //List<GioHang> lstGioHang = LayGioHang();
+            //ddh.MaKH = kh.MaKH;
+            //ddh.NgayDat = DateTime.Now;
+            ////var ngayGiao = string.Format("{0:MM/dd/yyyy}", f["NgayGiao"]);
+            ////ddh.NgayGiao = DateTime.Parse(ngayGiao);
+            //ddh.TinhTrangGiaoHang = 1;
+            //ddh.DaThanhToan = false;
+            //db.DONDATHANGs.InsertOnSubmit(ddh);
+            //db.SubmitChanges();
+            //foreach (var item in lstGioHang)
+            //{
+            //    CHITIETDATHANG ctdh = new CHITIETDATHANG();
+            //    ctdh.MaDonHang = ddh.MaDonHang;
+            //    ctdh.MaSach = item.iMaSach;
+            //    ctdh.SoLuong = item.iSoLuong;
+            //    ctdh.DonGia = (decimal)item.dDonGia;
+            //    db.CHITIETDATHANGs.InsertOnSubmit(ctdh);
+            //}
+            //db.SubmitChanges();
+            //Session["GioHang"] = null;
         }
 
     }
